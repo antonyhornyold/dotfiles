@@ -3,6 +3,7 @@ vim.g.mapleader = " "
 require("config.options")
 require("config.plugins")
 require("config.colorscheme")
+require("config.oil")
 
 require("config.completion")
 require("config.lsp")
