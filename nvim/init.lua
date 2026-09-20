@@ -4,6 +4,7 @@ require("config.options")
 require("config.plugins")
 require("config.colorscheme")
 
+require("config.completion")
 require("config.lsp")
 require("config.treesitter")
 require("config.formatting")
