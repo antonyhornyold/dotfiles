@@ -23,6 +23,7 @@ opt.smartcase = true     -- ...unless the search contains a capital letter
 opt.splitbelow = true
 opt.splitright = true
 opt.undofile = true      -- Preserve undo history between sessions
+opt.cmdheight = 0         -- Give the floating command line the full editor height
 
 vim.o.cursorline = true
 vim.o.cursorlineopt = "both"
