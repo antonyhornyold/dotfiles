@@ -15,28 +15,6 @@ require("mini.surround").setup({
   mappings = { replace = "cs" },
 })
 
-local function set_oil_float_highlights()
-  local float = vim.api.nvim_get_hl(0, { name = "NormalFloat", link = false })
-  local border = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false })
-  vim.api.nvim_set_hl(0, "OilFloatNormal", {
-    fg = float.fg,
-    ctermfg = float.ctermfg,
-    bg = "NONE",
-    ctermbg = "NONE",
-  })
-  vim.api.nvim_set_hl(0, "OilFloatBorder", {
-    fg = border.fg,
-    ctermfg = border.ctermfg,
-    bg = "NONE",
-    ctermbg = "NONE",
-  })
-end
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("OilFloatColors", { clear = true }),
-  callback = set_oil_float_highlights,
-})
-
 require("oil").setup({
   columns = { "icon" },
   keymaps = {
@@ -45,13 +23,13 @@ require("oil").setup({
   float = {
     max_width = 0.5,
     max_height = 0.5,
-    border = "rounded",
+    border = "solid",
     get_win_title = function()
-      return ""
+      return " Oil "
     end,
     win_options = {
-      winbar = "%<%{v:lua.require('oil').get_current_dir()}",
-      winhighlight = "Normal:OilFloatNormal,NormalFloat:OilFloatNormal,FloatBorder:OilFloatBorder,WinBar:TabLineSel,WinBarNC:TabLine",
+      winbar = "%=%<%{v:lua.require('oil').get_current_dir()}%=",
+      winhighlight = "FloatTitle:MasonHeader,WinBar:NormalFloat,WinBarNC:NormalFloat",
       number = false,
       relativenumber = false,
     },
@@ -61,11 +39,13 @@ require("oil").setup({
       local height = layout.get_editor_height()
 
       -- Prefer half the screen, but keep the explorer usable in smaller panes.
-      -- Leave room for the border and a margin on each side.
+      -- Leave room for the solid border and a margin on each side.
       config.width = math.min(math.max(config.width, 44), math.max(1, width - 4))
       config.height = math.min(math.max(config.height, 12), math.max(1, height - 4))
-      config.row = math.floor((height - config.height) / 2)
-      config.col = math.floor((width - config.width) / 2) - 1
+      config.row = math.max(0, math.floor((height - config.height - 2) / 2))
+      config.col = math.max(0, math.floor((width - config.width - 2) / 2))
+      config.title = " Oil "
+      config.title_pos = "center"
       return config
     end,
   },
