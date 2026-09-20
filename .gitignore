@@ -1,0 +1,6 @@
+/*
+!/.gitignore
+!/nvim/
+!/ghostty/
+/nvim/nvim.log
+/**/.DS_Store

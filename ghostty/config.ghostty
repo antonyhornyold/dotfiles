@@ -1,0 +1,22 @@
+# Gruvbox Material Light theme
+theme = Gruvbox Material Light
+
+# Font and size in points
+font-family = IosevkaTerm NFM Light
+font-size = 14
+
+# 5% transparent (95% opaque)
+background-opacity = 0.95
+background-blur = 20
+
+# Start in non-native fullscreen
+fullscreen = non-native
+
+window-decoration = false
+macos-window-shadow = false
+
+# Space between text and window edges, in points
+# window-padding-x = 16
+# window-padding-y = 36
+
+quit-after-last-window-closed = true
