@@ -8,6 +8,7 @@ vim.pack.add({
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/mason-org/mason-lspconfig.nvim",
   "https://github.com/stevearc/conform.nvim",
+  "https://github.com/mfussenegger/nvim-lint",
 })
 
 require("mini.icons").setup()
