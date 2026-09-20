@@ -15,6 +15,7 @@ opt.expandtab = true
 
 -- Useful editing defaults
 opt.signcolumn = "yes"   -- Prevent the text moving when diagnostics appear
+vim.diagnostic.config({ virtual_text = { current_line = true, spacing = 2 } })
 opt.scrolloff = 5        -- Keep five lines visible around the cursor
 opt.sidescrolloff = 5
 opt.ignorecase = true    -- Case-insensitive search...
