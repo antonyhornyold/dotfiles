@@ -8,7 +8,10 @@ require("nvim-ts-autotag").setup({
   },
 })
 
+local group = vim.api.nvim_create_augroup("ConfiguredTreesitter", { clear = true })
+
 vim.api.nvim_create_autocmd("FileType", {
+  group = group,
   pattern = { "html", "javascriptreact", "typescriptreact" },
   callback = function(args)
     local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
