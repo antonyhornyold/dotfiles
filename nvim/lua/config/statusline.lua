@@ -1,5 +1,6 @@
 local M = {}
 local branches = {}
+local palette = require("catppuccin.palettes").get_palette("mocha")
 
 local modes = {
   n = { "NORMAL", "StatusModeNormal" },
@@ -13,12 +14,12 @@ local modes = {
 }
 
 local mode_color_groups = {
-  StatusModeNormal = "DiagnosticInfo",
-  StatusModeInsert = "String",
-  StatusModeVisual = "DiagnosticHint",
-  StatusModeReplace = "DiagnosticError",
-  StatusModeCommand = "DiagnosticWarn",
-  StatusModeTerminal = "Function",
+  StatusModeNormal = palette.blue,
+  StatusModeInsert = palette.lavender,
+  StatusModeVisual = palette.mauve,
+  StatusModeReplace = palette.red,
+  StatusModeCommand = palette.peach,
+  StatusModeTerminal = palette.green,
 }
 
 local function filetype_icon(win)
@@ -56,23 +57,16 @@ local function diagnostics(buf, highlight)
 end
 
 local function set_colors()
-  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-  local statusline = vim.api.nvim_get_hl(0, { name = "StatusLine", link = false })
   local inactive = vim.api.nvim_get_hl(0, { name = "StatusLineNC", link = false })
-  local error_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticError", link = false })
-  local warn_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn", link = false })
 
-  for group, source in pairs(mode_color_groups) do
-    local source_hl = vim.api.nvim_get_hl(0, { name = source, link = false })
-
-    local background = source_hl.fg or statusline.fg
+  for group, background in pairs(mode_color_groups) do
     vim.api.nvim_set_hl(0, group, {
-      fg = normal.bg or statusline.bg,
+      fg = palette.mantle,
       bg = background,
       bold = true,
     })
-    vim.api.nvim_set_hl(0, group .. "DiagnosticError", { fg = error_hl.fg, bg = background, bold = true })
-    vim.api.nvim_set_hl(0, group .. "DiagnosticWarn", { fg = warn_hl.fg, bg = background, bold = true })
+    vim.api.nvim_set_hl(0, group .. "DiagnosticError", { fg = palette.mantle, bg = background, bold = true })
+    vim.api.nvim_set_hl(0, group .. "DiagnosticWarn", { fg = palette.mantle, bg = background, bold = true })
   end
 
   vim.api.nvim_set_hl(0, "StatusModeInactive", inactive)

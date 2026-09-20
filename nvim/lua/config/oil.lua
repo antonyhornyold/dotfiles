@@ -6,7 +6,12 @@ require("oil").setup({
   float = {
     max_width = 0.5,
     max_height = 0.5,
-    border = "solid",
+    border = {
+      { " ", "OilFloatTop" },
+      { " ", "OilFloatTop" },
+      { " ", "OilFloatTop" },
+      " ", " ", " ", " ", " ",
+    },
     get_win_title = function()
       return " Oil "
     end,

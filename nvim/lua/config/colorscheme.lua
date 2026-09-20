@@ -1,10 +1,15 @@
 -- lua/config/colorscheme.lua
 vim.o.termguicolors = true
-vim.o.background = "light"
+vim.o.background = "dark"
 
--- Set Gruvbox Material options before loading the scheme.
-vim.g.gruvbox_material_background = "medium"
-vim.g.gruvbox_material_foreground = "material"
-vim.g.gruvbox_material_transparent_background = 1
+require("catppuccin").setup({
+  flavour = "mocha",
+  transparent_background = true,
+  custom_highlights = function(colors)
+    return {
+      OilFloatTop = { fg = colors.surface2, bg = colors.none },
+    }
+  end,
+})
 
-vim.cmd.colorscheme("gruvbox-material")
+vim.cmd.colorscheme("catppuccin-mocha")
