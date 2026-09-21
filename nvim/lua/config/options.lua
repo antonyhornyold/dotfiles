@@ -14,16 +14,16 @@ opt.softtabstop = 2
 opt.expandtab = true
 
 -- Useful editing defaults
-opt.signcolumn = "yes"   -- Prevent the text moving when diagnostics appear
+opt.signcolumn = "yes" -- Prevent the text moving when diagnostics appear
 vim.diagnostic.config({ virtual_text = { current_line = true, spacing = 2 } })
-opt.scrolloff = 5        -- Keep five lines visible around the cursor
+opt.scrolloff = 5 -- Keep five lines visible around the cursor
 opt.sidescrolloff = 5
-opt.ignorecase = true    -- Case-insensitive search...
-opt.smartcase = true     -- ...unless the search contains a capital letter
+opt.ignorecase = true -- Case-insensitive search...
+opt.smartcase = true -- ...unless the search contains a capital letter
 opt.splitbelow = true
 opt.splitright = true
-opt.undofile = true      -- Preserve undo history between sessions
-opt.cmdheight = 0         -- Give the floating command line the full editor height
+opt.undofile = true -- Preserve undo history between sessions
+opt.cmdheight = 0 -- Give the floating command line the full editor height
 
 vim.o.cursorline = true
 vim.o.cursorlineopt = "both"
