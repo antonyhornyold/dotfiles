@@ -15,6 +15,7 @@ vim.pack.add({
 
 require("mini.icons").setup()
 require("mini.pairs").setup()
+require("mini.diff").setup()
 require("mini.surround").setup({
   mappings = { replace = "cs" },
 })
