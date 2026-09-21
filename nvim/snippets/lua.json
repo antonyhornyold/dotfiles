@@ -1,0 +1,22 @@
+{
+  "Local function": {
+    "prefix": "lfn",
+    "body": "local function ${1:name}(${2:args})\n  $0\nend",
+    "description": "Local Lua function"
+  },
+  "Module": {
+    "prefix": "mod",
+    "body": "local M = {}\n\n$0\n\nreturn M",
+    "description": "Lua module"
+  },
+  "Neovim keymap": {
+    "prefix": "keymap",
+    "body": "vim.keymap.set(\"${1:n}\", \"${2:lhs}\", ${3:rhs}, { desc = \"${4:Description}\" })$0",
+    "description": "Neovim keymap"
+  },
+  "Neovim autocmd": {
+    "prefix": "autocmd",
+    "body": "vim.api.nvim_create_autocmd(\"${1:Event}\", {\n  group = ${2:group},\n  callback = function(args)\n    $0\n  end,\n})",
+    "description": "Neovim autocmd"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "Custom property": {
+    "prefix": "var",
+    "body": "--${1:name}: ${2:value};$0",
+    "description": "CSS custom property"
+  },
+  "Media query": {
+    "prefix": "media",
+    "body": "@media (${1:min-width}: ${2:48rem}) {\n  $0\n}",
+    "description": "Media query"
+  },
+  "Grid": {
+    "prefix": "grid",
+    "body": "display: grid;\ngrid-template-columns: repeat(${1:3}, minmax(0, 1fr));\ngap: ${2:1rem};$0",
+    "description": "Grid layout"
+  },
+  "Flex": {
+    "prefix": "flex",
+    "body": "display: flex;\nalign-items: ${1:center};\ngap: ${2:1rem};$0",
+    "description": "Flex layout"
+  }
+}

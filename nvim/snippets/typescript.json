@@ -1,0 +1,22 @@
+{
+  "Interface": {
+    "prefix": "interface",
+    "body": "interface ${1:Name} {\n  ${2:property}: ${3:string};\n}$0",
+    "description": "TypeScript interface"
+  },
+  "Type alias": {
+    "prefix": "type",
+    "body": "type ${1:Name} = ${2:unknown};$0",
+    "description": "Type alias"
+  },
+  "Typed function": {
+    "prefix": "tfn",
+    "body": "function ${1:name}(${2:arg}: ${3:string}): ${4:void} {\n  $0\n}",
+    "description": "Typed function"
+  },
+  "Generic function": {
+    "prefix": "gfn",
+    "body": "function ${1:name}<T>(${2:value}: T): T {\n  $0\n}",
+    "description": "Generic function"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "HTML document": {
+    "prefix": "html5",
+    "body": ["<!doctype html>", "<html lang=\"${1:en}\">", "<head>", "  <meta charset=\"utf-8\">", "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">", "  <title>${2:Title}</title>", "</head>", "<body>", "  $0", "</body>", "</html>"],
+    "description": "HTML document"
+  },
+  "Link": {
+    "prefix": "link",
+    "body": "<a href=\"${1:url}\">${2:text}</a>$0",
+    "description": "HTML link"
+  },
+  "Image": {
+    "prefix": "img",
+    "body": "<img src=\"${1:url}\" alt=\"${2:description}\">$0",
+    "description": "Image with alt text"
+  },
+  "Button": {
+    "prefix": "button",
+    "body": "<button type=\"${1|button,submit,reset|}\">${2:Label}</button>$0",
+    "description": "Button with explicit type"
+  }
+}

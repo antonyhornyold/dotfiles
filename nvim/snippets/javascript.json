@@ -1,0 +1,22 @@
+{
+  "Arrow function": {
+    "prefix": "afn",
+    "body": "const ${1:name} = (${2:args}) => {\n  $0\n};",
+    "description": "Arrow function"
+  },
+  "Async function": {
+    "prefix": "asyncfn",
+    "body": "async function ${1:name}(${2:args}) {\n  $0\n}",
+    "description": "Async function"
+  },
+  "Try catch": {
+    "prefix": "try",
+    "body": "try {\n  $1\n} catch (${2:error}) {\n  $0\n}",
+    "description": "Try/catch block"
+  },
+  "Import named": {
+    "prefix": "imn",
+    "body": "import { ${1:name} } from '${2:module}';$0",
+    "description": "Named import"
+  }
+}
