@@ -14,6 +14,7 @@ opt.softtabstop = 2
 opt.expandtab = true
 
 -- Useful editing defaults
+opt.wrap = false
 opt.signcolumn = "yes" -- Prevent the text moving when diagnostics appear
 vim.diagnostic.config({ virtual_text = { current_line = true, spacing = 2 } })
 opt.scrolloff = 5 -- Keep five lines visible around the cursor
@@ -23,6 +24,7 @@ opt.smartcase = true -- ...unless the search contains a capital letter
 opt.splitbelow = true
 opt.splitright = true
 opt.undofile = true -- Preserve undo history between sessions
+opt.pumheight = 10 -- Keep the completion menu compact
 opt.cmdheight = 0 -- Give the floating command line the full editor height
 
 vim.o.cursorline = true
