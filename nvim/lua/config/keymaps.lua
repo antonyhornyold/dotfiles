@@ -7,7 +7,7 @@ vim.keymap.set("n", "-", "<cmd>Oil --float<CR>", {
   desc = "Open floating file explorer",
 })
 
-vim.keymap.set({ "n", "v" }, "<leader>f", function()
+vim.keymap.set({ "n", "v" }, "<leader>cf", function()
   require("conform").format({ async = true })
 end, { desc = "Format buffer or selection" })
 
