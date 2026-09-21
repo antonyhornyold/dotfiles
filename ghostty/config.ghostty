@@ -17,6 +17,6 @@ macos-window-shadow = false
 
 # Space between text and window edges, in points
 # window-padding-x = 16
-# window-padding-y = 36
+window-padding-y = 36,0
 
 quit-after-last-window-closed = true
