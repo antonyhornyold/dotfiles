@@ -7,6 +7,7 @@ require("config.plugins")
 require("config.cmdline")
 require("config.colorscheme")
 require("config.oil")
+require("config.fzf")
 
 require("config.completion")
 require("config.lsp")

@@ -10,6 +10,7 @@ vim.pack.add({
   "https://github.com/stevearc/conform.nvim",
   "https://github.com/mfussenegger/nvim-lint",
   "https://github.com/rachartier/tiny-cmdline.nvim",
+  "https://github.com/ibhagwan/fzf-lua",
 })
 
 require("mini.icons").setup()
