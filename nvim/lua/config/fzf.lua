@@ -25,5 +25,6 @@ fzf.setup({
 })
 
 vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "Find files" })
-vim.keymap.set("n", "<leader>fg", fzf.live_grep, { desc = "Search text" })
+vim.keymap.set("n", "<leader>fg", fzf.blines, { desc = "Search current buffer" })
+vim.keymap.set("n", "<leader>fG", fzf.live_grep, { desc = "Search project text" })
 vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Switch buffers" })
