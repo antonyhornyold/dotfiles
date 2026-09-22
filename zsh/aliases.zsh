@@ -1,5 +1,8 @@
 # Preserve the existing eza shortcuts.
 if (( $+commands[eza] )); then
+  # Catppuccin Mocha: text for files, blue for directories, green for executables.
+  export EZA_COLORS='fi=38;2;205;214;244:di=38;2;137;180;250:ex=38;2;166;227;161'
+
   alias ls='eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions'
   alias la='eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions --all'
   alias tr1='eza --color=always --tree --level=2 --git-ignore --git --icons=always --all'
