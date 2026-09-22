@@ -47,10 +47,13 @@ mini.clue shows key hints after Space in Normal or Visual mode and after `[`,
 ## Plugins and tools
 
 Plugins are declared in `lua/config/plugins.lua` and installed by Neovim's
-`vim.pack`. They are Catppuccin, Oil, mini.nvim (icons, pairs, diff, surround,
-completion, snippets, keymap, clue), nvim-treesitter, nvim-ts-autotag, Mason,
-nvim-lspconfig, mason-lspconfig, Conform, nvim-lint, tiny-cmdline, and fzf-lua.
+`vim.pack`. They are Catppuccin, Oil, oil-git-status, mini.nvim (icons, pairs,
+diff, surround, completion, snippets, keymap, clue), nvim-treesitter,
+nvim-ts-autotag, Mason, nvim-lspconfig, mason-lspconfig, Conform, nvim-lint,
+tiny-cmdline, and fzf-lua.
 The statusline and floating terminal are configured locally without plugins.
+oil-git-status shows staged and working-tree Git status in Oil's two sign
+columns; ignored files are excluded from its status display.
 
 | Purpose | Tools |
 | --- | --- |
