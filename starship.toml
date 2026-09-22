@@ -1,1 +1,364 @@
-# Start with Starship's defaults; add prompt customizations here later.
+"$schema" = "https://starship.rs/config-schema.json"
+
+palette = "catppuccin_mocha"
+add_newline = true
+
+# Keep prompt contents and ordering intentional. Most modules remain invisible
+# until their matching environment or project files are detected.
+format = """
+${custom.remote_os}\
+$username\
+$hostname\
+$container\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$nodejs\
+$python\
+$rust\
+$golang\
+$php\
+$lua\
+$java\
+$ruby\
+$swift\
+$c\
+$cpp\
+$dotnet\
+$docker_context\
+$kubernetes\
+$terraform\
+$nix_shell\
+${custom.aws_prod}\
+${custom.aws}\
+${custom.gcloud_prod}\
+${custom.gcloud}\
+${custom.azure_prod}\
+${custom.azure}\
+${custom.direnv_warning}\
+$sudo\
+$line_break\
+$character"""
+
+right_format = "$cmd_duration$status$jobs"
+
+# Display the remote OS only over SSH. Username and hostname below are also
+# configured to remain hidden in local shells.
+[custom.remote_os]
+when = '''test -n "$SSH_CONNECTION"'''
+command = '''
+case "$(uname -s)" in
+  Darwin) printf '' ;;
+  Linux)
+    if test -r /etc/os-release; then
+      . /etc/os-release
+    fi
+    case "${ID:-linux}" in
+      ubuntu) printf '' ;;
+      arch) printf '' ;;
+      artix) printf '' ;;
+      debian) printf '' ;;
+      fedora) printf '' ;;
+      nixos) printf '' ;;
+      *) printf '' ;;
+    esac
+    ;;
+  *) printf '' ;;
+esac
+'''
+shell = ["sh"]
+format = "[$output](peach) "
+description = "Remote operating system"
+
+[username]
+show_always = false
+format = "[󰢹 $user](peach)@"
+
+[hostname]
+ssh_only = true
+format = "[$hostname](peach)  "
+
+[container]
+symbol = "󰡨"
+format = "[$symbol $name](peach)  "
+
+[directory]
+format = "[$path]($style)[$read_only]($read_only_style)  "
+repo_root_format = "[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style)  "
+style = "blue"
+before_repo_root_style = "blue"
+repo_root_style = "bold blue"
+read_only = " 󰌾"
+read_only_style = "red"
+truncation_length = 4
+truncate_to_repo = true
+truncation_symbol = "←/"
+home_symbol = "~"
+
+[git_branch]
+symbol = ""
+format = "[$symbol $branch]($style) "
+style = "bold mauve"
+truncation_length = 32
+truncation_symbol = "…"
+
+# The commit is shown only when HEAD is detached.
+[git_commit]
+only_detached = true
+commit_hash_length = 7
+tag_disabled = true
+format = "[ $hash](mauve) "
+
+[git_state]
+format = "[$state( $progress_current/$progress_total)](bold red) "
+
+[git_status]
+format = "($ahead_behind$staged$modified$untracked$renamed$deleted$conflicted$stashed) "
+ahead = "[⇡$count](sapphire) "
+behind = "[⇣$count](sapphire) "
+diverged = "[⇡$ahead_count⇣$behind_count](sapphire) "
+staged = "[+$count](green) "
+modified = "[●$count](yellow) "
+untracked = "[?$count](peach) "
+renamed = "[»$count](lavender) "
+deleted = "[−$count](red) "
+conflicted = "[!$count](bold red) "
+stashed = "[≡$count](blue) "
+
+# Language modules are detected contextually and use compact versions.
+[nodejs]
+symbol = ""
+format = "[$symbol $version](green)  "
+version_format = "${major}"
+
+[python]
+symbol = ""
+format = '[$symbol $version( \($virtualenv\))](yellow)  '
+version_format = "${major}.${minor}"
+
+[rust]
+symbol = ""
+format = "[$symbol $version](peach)  "
+version_format = "${major}.${minor}"
+
+[golang]
+symbol = ""
+format = "[$symbol $version](sky)  "
+version_format = "${major}.${minor}"
+
+[php]
+symbol = ""
+format = "[$symbol $version](mauve)  "
+version_format = "${major}.${minor}"
+
+[lua]
+symbol = ""
+format = "[$symbol $version](blue)  "
+version_format = "${major}.${minor}"
+
+[java]
+symbol = ""
+format = "[$symbol $version](red)  "
+version_format = "${major}"
+
+[ruby]
+symbol = ""
+format = "[$symbol $version](maroon)  "
+version_format = "${major}.${minor}"
+
+[swift]
+symbol = ""
+format = "[$symbol $version](peach)  "
+version_format = "${major}.${minor}"
+
+[c]
+symbol = ""
+format = "[$symbol $version](blue)  "
+version_format = "${major}.${minor}"
+
+[cpp]
+symbol = ""
+format = "[$symbol $version](sapphire)  "
+version_format = "${major}.${minor}"
+
+[dotnet]
+symbol = ""
+format = "[$symbol $version](mauve)  "
+version_format = "${major}"
+
+[docker_context]
+symbol = ""
+format = "[$symbol $context](blue)  "
+only_with_files = false
+
+[kubernetes]
+disabled = false
+symbol = "󱃾"
+format = '[$symbol $context(\/$namespace)](yellow)  '
+
+[terraform]
+symbol = "󱁢"
+format = "[$symbol $workspace](mauve)  "
+
+[nix_shell]
+symbol = ""
+format = "[$symbol$name](sapphire)  "
+
+# Cloud modules use two mutually exclusive variants so names containing
+# "prod" or "production" are red. Checks run only when their CLI is present.
+[custom.aws_prod]
+when = '''
+command -v aws >/dev/null 2>&1 || exit 1
+profile=${AWS_PROFILE:-${AWS_DEFAULT_PROFILE:-}}
+case "$profile" in *[Pp][Rr][Oo][Dd]*) exit 0 ;; *) exit 1 ;; esac
+'''
+command = '''
+profile=${AWS_PROFILE:-${AWS_DEFAULT_PROFILE:-default}}
+region=${AWS_REGION:-${AWS_DEFAULT_REGION:-}}
+printf '%s%s' "$profile" "${region:+ $region}"
+'''
+shell = ["sh"]
+symbol = "󰸏"
+format = "[$symbol $output](red)  "
+description = "Production AWS profile and region"
+
+[custom.aws]
+when = '''
+command -v aws >/dev/null 2>&1 || exit 1
+profile=${AWS_PROFILE:-${AWS_DEFAULT_PROFILE:-}}
+test -n "$profile" || exit 1
+case "$profile" in *[Pp][Rr][Oo][Dd]*) exit 1 ;; *) exit 0 ;; esac
+'''
+command = '''
+profile=${AWS_PROFILE:-${AWS_DEFAULT_PROFILE:-default}}
+region=${AWS_REGION:-${AWS_DEFAULT_REGION:-}}
+printf '%s%s' "$profile" "${region:+ $region}"
+'''
+shell = ["sh"]
+symbol = "󰸏"
+format = "[$symbol $output](peach)  "
+description = "AWS profile and region"
+
+[custom.gcloud_prod]
+when = '''
+command -v gcloud >/dev/null 2>&1 || exit 1
+project=$(gcloud config get-value project 2>/dev/null)
+case "$project" in *[Pp][Rr][Oo][Dd]*) exit 0 ;; *) exit 1 ;; esac
+'''
+command = '''gcloud config get-value project 2>/dev/null'''
+shell = ["sh"]
+symbol = "󱇶"
+format = "[$symbol $output](red)  "
+description = "Production Google Cloud project"
+
+[custom.gcloud]
+when = '''
+command -v gcloud >/dev/null 2>&1 || exit 1
+project=$(gcloud config get-value project 2>/dev/null)
+test -n "$project" && test "$project" != "(unset)" || exit 1
+case "$project" in *[Pp][Rr][Oo][Dd]*) exit 1 ;; *) exit 0 ;; esac
+'''
+command = '''gcloud config get-value project 2>/dev/null'''
+shell = ["sh"]
+symbol = "󱇶"
+format = "[$symbol $output](blue)  "
+description = "Google Cloud project"
+
+[custom.azure_prod]
+when = '''
+command -v az >/dev/null 2>&1 || exit 1
+subscription=$(az account show --query name -o tsv 2>/dev/null)
+case "$subscription" in *[Pp][Rr][Oo][Dd]*) exit 0 ;; *) exit 1 ;; esac
+'''
+command = '''az account show --query name -o tsv 2>/dev/null'''
+shell = ["sh"]
+symbol = "󰠅"
+format = "[$symbol $output](red)  "
+description = "Production Azure subscription"
+
+[custom.azure]
+when = '''
+command -v az >/dev/null 2>&1 || exit 1
+subscription=$(az account show --query name -o tsv 2>/dev/null)
+test -n "$subscription" || exit 1
+case "$subscription" in *[Pp][Rr][Oo][Dd]*) exit 1 ;; *) exit 0 ;; esac
+'''
+command = '''az account show --query name -o tsv 2>/dev/null'''
+shell = ["sh"]
+symbol = "󰠅"
+format = "[$symbol $output](blue)  "
+description = "Azure subscription"
+
+# A healthy direnv environment stays quiet; only unapproved or denied .envrc
+# files produce a warning.
+[custom.direnv_warning]
+when = '''
+command -v direnv >/dev/null 2>&1 || exit 1
+test -f .envrc || exit 1
+direnv status 2>/dev/null | grep -Eq 'Found RC allowed (false|0)|Found RC allowPath .* denied'
+'''
+command = '''printf 'not allowed' '''
+shell = ["sh"]
+symbol = "󰇧"
+format = "[$symbol $output](yellow)  "
+description = "Direnv configuration requires approval"
+
+[sudo]
+disabled = false
+symbol = "󰌆"
+format = "[$symbol](red)  "
+
+# Right prompt: previous command result first, then current shell state.
+[cmd_duration]
+min_time = 3000
+show_milliseconds = false
+format = "[󰔟 $duration](yellow)  "
+
+[status]
+disabled = false
+symbol = "󰅖"
+format = "[$symbol $status](red)  "
+
+[jobs]
+symbol = "󰜎"
+symbol_threshold = 1
+number_threshold = 2
+format = "[$symbol( $number)](blue)"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold blue)"
+vimcmd_replace_one_symbol = "[❮](bold red)"
+vimcmd_replace_symbol = "[❮](bold red)"
+vimcmd_visual_symbol = "[❮](bold mauve)"
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
