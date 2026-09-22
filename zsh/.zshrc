@@ -4,8 +4,8 @@
 export EDITOR=nvim
 export VISUAL=nvim
 
-# Keep the existing history file so previous commands remain available.
-HISTFILE="$HOME/.zhistory"
+# Keep history in the XDG state directory.
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 HISTSIZE=1000
 SAVEHIST=1000
 setopt SHARE_HISTORY HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS HIST_VERIFY
