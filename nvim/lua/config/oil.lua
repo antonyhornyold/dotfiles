@@ -1,5 +1,8 @@
 require("oil").setup({
   columns = { "icon" },
+  win_options = {
+    signcolumn = "yes:2",
+  },
   keymaps = {
     ["q"] = "actions.close",
   },
@@ -38,3 +41,5 @@ require("oil").setup({
     end,
   },
 })
+
+require("oil-git-status").setup({ show_ignored = false })
