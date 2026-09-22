@@ -1,6 +1,9 @@
 /*
 !/.gitignore
+!/Brewfile
+!/starship.toml
 !/nvim/
 !/ghostty/
+!/zsh/
 /nvim/nvim.log
 /**/.DS_Store
