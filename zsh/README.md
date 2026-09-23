@@ -77,6 +77,10 @@ Completion data is cached at `${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump`.
 | `mkcd DIR` | Create a directory and enter it |
 | `zsh-tools-update` | Install or update tools from the Brewfile |
 
+Git shortcuts: `gs` (status), `ga` (add), `gap` (interactive add), `gd` (diff), `gds` (staged diff), `gc` (commit), and `gp` (push).
+
+npm shortcuts: `nr` (run), `nd` (run dev), `nb` (run build), `nt` (test), `ni` (install), and `nci` (clean install from the lockfile).
+
 Optional Zsh suffix aliases for web-development files are documented but disabled in `aliases.zsh`. When enabled, entering a filename such as `app.ts` directly at the prompt opens it in Neovim.
 
 ## Fuzzy finding

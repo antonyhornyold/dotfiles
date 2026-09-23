@@ -44,6 +44,23 @@ alias glog='PAGER="less -F -X" git log'
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 alias dots='git -C ~/.config'
 
+# Git: inspect, stage, commit, and push.
+alias gs='git status --short --branch'
+alias ga='git add'
+alias gap='git add -p'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gc='git commit'
+alias gp='git push'
+
+# npm: common project commands.
+alias nr='npm run'
+alias nd='npm run dev'
+alias nb='npm run build'
+alias nt='npm test'
+alias ni='npm install'
+alias nci='npm ci'
+
 if (( $+commands[bat] )); then
   alias cat='bat'
 fi
