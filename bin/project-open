@@ -1,0 +1,73 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+  printf 'Usage: project-open [project-directory]\n'
+  printf 'Open Ghostty windows for Neovim, Codex, and a dev server.\n'
+}
+
+if [[ ${1:-} == --help ]]; then
+  usage
+  exit 0
+fi
+if (( $# > 1 )); then
+  usage >&2
+  exit 2
+fi
+
+project_dir=${1:-.}
+if [[ ! -d $project_dir ]]; then
+  printf 'project-open: directory does not exist: %s\n' "$project_dir" >&2
+  exit 1
+fi
+project_dir=$(cd -- "$project_dir" && pwd -P)
+
+if [[ ! -d /Applications/Ghostty.app ]]; then
+  printf 'project-open: Ghostty is not installed in /Applications.\n' >&2
+  exit 1
+fi
+for command_name in nvim codex; do
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    printf 'project-open: %s is not on PATH. Open a new shell after installing it.\n' "$command_name" >&2
+    exit 1
+  fi
+done
+
+start_server=false
+if [[ -f $project_dir/package.json ]] && command -v node >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
+  if (cd -- "$project_dir" && node -e 'const p = require("./package.json"); process.exit(p.scripts && p.scripts.dev ? 0 : 1)'); then
+    start_server=true
+  fi
+fi
+
+osascript - "$project_dir" "$start_server" <<'APPLESCRIPT'
+on run argv
+    set projectDir to item 1 of argv
+    set startServer to item 2 of argv is "true"
+
+    tell application "Ghostty"
+        activate
+        set cfg to new surface configuration
+        set initial working directory of cfg to projectDir
+
+        set workWin to new window with configuration cfg
+        set editorPane to terminal 1 of selected tab of workWin
+        set codexPane to split editorPane direction right with configuration cfg
+
+        set serverWin to new window with configuration cfg
+        set serverPane to terminal 1 of selected tab of serverWin
+        set terminalPane to split serverPane direction right with configuration cfg
+
+        input text "nvim ." to editorPane
+        send key "enter" to editorPane
+        input text "codex" to codexPane
+        send key "enter" to codexPane
+        if startServer then
+            input text "npm run dev" to serverPane
+            send key "enter" to serverPane
+        end if
+
+        focus editorPane
+    end tell
+end run
+APPLESCRIPT

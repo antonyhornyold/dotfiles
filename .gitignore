@@ -10,5 +10,6 @@
 !/git/
 !/bat/
 !/lazygit/
+!/bin/
 /nvim/nvim.log
 /**/.DS_Store
