@@ -1,5 +1,5 @@
 -- Tag completion needs a parser for the current filetype (e.g. html or tsx).
-require("nvim-treesitter").install({ "html", "javascript", "tsx" })
+require("nvim-treesitter").install({ "html", "javascript", "tsx", "sql" })
 
 require("nvim-ts-autotag").setup({
   opts = {
@@ -12,7 +12,7 @@ local group = vim.api.nvim_create_augroup("ConfiguredTreesitter", { clear = true
 
 vim.api.nvim_create_autocmd("FileType", {
   group = group,
-  pattern = { "html", "javascriptreact", "typescriptreact" },
+  pattern = { "html", "javascriptreact", "typescriptreact", "sql" },
   callback = function(args)
     local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
     if lang and vim.treesitter.language.add(lang) then

@@ -16,6 +16,7 @@ require("mason-lspconfig").setup({
     "cssls",
     "jsonls",
     "tailwindcss",
+    "postgres_lsp",
   },
   automatic_enable = {
     "lua_ls",
@@ -24,5 +25,6 @@ require("mason-lspconfig").setup({
     "cssls",
     "jsonls",
     "tailwindcss",
+    "postgres_lsp",
   },
 })

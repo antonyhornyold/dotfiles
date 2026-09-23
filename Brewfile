@@ -6,6 +6,8 @@ brew "fd"
 brew "fzf"
 brew "ripgrep"
 brew "neovim"
+brew "postgresql@18", link: true
+brew "pgformatter"
 brew "zsh-autosuggestions"
 brew "zsh-vi-mode"
 brew "zsh-fast-syntax-highlighting"

@@ -58,16 +58,37 @@ tracked dotfiles remain visible. Press `g.` in Oil to reveal hidden entries.
 
 | Purpose | Tools |
 | --- | --- |
-| LSP via Mason | Lua, TypeScript/JavaScript, HTML, CSS, JSON, Tailwind CSS |
-| Format on save via Conform | Prettier (HTML, CSS, SCSS, JS, TS, JSON, JSONC, Markdown, MDX, YAML), StyLua (Lua), shfmt (Zsh) |
+| LSP via Mason | Lua, TypeScript/JavaScript, HTML, CSS, JSON, Tailwind CSS, PostgreSQL SQL |
+| Format via Conform | Prettier (HTML, CSS, SCSS, JS, TS, JSON, JSONC, Markdown, MDX, YAML), StyLua (Lua), shfmt (Zsh), pg_format (SQL, manual only) |
 | Lint via nvim-lint | luacheck (Lua), Zsh's built-in syntax check, HTMLHint (HTML), project-local Stylelint (CSS) and ESLint (JS/TS) |
-| Treesitter | HTML, JavaScript, and TSX parsers for tag handling |
+| Treesitter | HTML, JavaScript, TSX, and SQL parsers |
 
 ESLint and Stylelint run only when their config file and executable are found
 in the project. Linting runs on buffer entry and after save. Mason provides the
 configured language servers and can install Prettier, StyLua, shfmt, and
 HTMLHint. `luacheck` must be available on `PATH`; Zsh uses `/bin/zsh`.
 fzf-lua's project text search needs `rg` (ripgrep).
+
+## PostgreSQL projects
+
+Put `postgres-language-server.jsonc` in the root of a project containing SQL files.
+The language server uses that file to identify the project. A minimal version is:
+
+```jsonc
+{
+  "$schema": "https://pg-language-server.com/latest/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": { "recommended": true }
+  }
+}
+```
+
+Database-aware completion needs a connection to a local development database;
+configure that per project and keep credentials out of Git. SQL formatting uses
+`pg_format` only when requested with `<leader>cf`, so migration files are not
+reformatted automatically on save. A project-level `.pg_format` file can set
+the team's SQL formatting style.
 
 ## Updating
 
