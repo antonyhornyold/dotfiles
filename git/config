@@ -2,4 +2,16 @@
 	name = Antony Hornyold
 	email = 1015546+antonyhornyold@users.noreply.github.com
 [init]
-	defaultBranch = master
+	defaultBranch = main
+[core]
+	editor = nvim
+[fetch]
+	prune = true
+[rerere]
+	enabled = true
+[rebase]
+	autoStash = true
+[diff]
+	algorithm = histogram
+[merge]
+	conflictStyle = zdiff3

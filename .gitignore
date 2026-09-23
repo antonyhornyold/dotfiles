@@ -6,5 +6,6 @@
 !/ghostty/
 !/zsh/
 !/git/
+!/bat/
 /nvim/nvim.log
 /**/.DS_Store

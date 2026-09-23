@@ -5,7 +5,6 @@ export EDITOR=nvim
 export VISUAL=nvim
 
 if (( $+commands[bat] )); then
-  export BAT_THEME='Catppuccin Mocha'
   export MANPAGER="sh -c 'col -bx | bat -plman --color=always | less -R'"
 fi
 
