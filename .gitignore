@@ -1,5 +1,7 @@
 /*
 !/.gitignore
+!/bootstrap.sh
+!/README.md
 !/Brewfile
 !/starship.toml
 !/nvim/
