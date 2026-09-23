@@ -23,6 +23,23 @@ alias -- -='cd -'
 alias vim='nvim'
 alias df='df -h'
 
+# Optional Zsh suffix aliases: uncomment the extensions you want to open in nvim.
+# For example, typing app.ts at the prompt would run nvim app.ts.
+# alias -s js=nvim
+# alias -s jsx=nvim
+# alias -s ts=nvim
+# alias -s tsx=nvim
+# alias -s html=nvim
+# alias -s css=nvim
+# alias -s scss=nvim
+# alias -s json=nvim
+# alias -s yaml=nvim
+# alias -s yml=nvim
+# alias -s md=nvim
+# alias -s vue=nvim
+# alias -s svelte=nvim
+# alias -s astro=nvim
+
 alias glog='PAGER="less -F -X" git log'
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 alias dots='git -C ~/.config'
