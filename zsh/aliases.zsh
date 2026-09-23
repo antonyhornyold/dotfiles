@@ -7,6 +7,8 @@ if (($+commands[eza])); then
   alias ls='eza -1h --color=auto --icons=auto --git'
   alias ll='eza --color=auto --long --git --no-filesize --icons=auto --no-time --no-user --no-permissions'
   alias la='eza --color=auto --long --git --no-filesize --icons=auto --no-time --no-user --no-permissions --all'
+  alias lt='eza --long --header --group --git --icons=auto --color=auto'
+  alias lta='eza --long --header --group --git --icons=auto --color=auto --all'
   alias tr1='eza --color=auto --tree --level=2 --git-ignore --git --icons=auto --all'
   alias tr2='eza --color=auto --tree --level=3 --git-ignore --git --icons=auto --all'
 
