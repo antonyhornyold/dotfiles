@@ -7,6 +7,7 @@ font-size = 14
 
 # 5% transparent (95% opaque)
 background-opacity = 0.95
+background-blur = 20
 
 # Start in non-native fullscreen
 fullscreen = non-native
@@ -17,5 +18,23 @@ macos-window-shadow = false
 # Space between text and window edges, in points
 window-padding-x = 16
 window-padding-y = 36,0
+
+mouse-hide-while-typing = true
+macos-option-as-alt = left
+
+# Make inactive splits distinguishable while keeping them readable
+unfocused-split-opacity = 0.80
+split-divider-color = #585b70
+
+# Tmux-style split controls using Ctrl-Space as the prefix
+keybind = ctrl+space>\=new_split:right
+keybind = ctrl+space>-=new_split:down
+keybind = ctrl+space>h=goto_split:left
+keybind = ctrl+space>j=goto_split:bottom
+keybind = ctrl+space>k=goto_split:top
+keybind = ctrl+space>l=goto_split:right
+keybind = ctrl+space>e=equalize_splits
+keybind = ctrl+space>z=toggle_split_zoom
+keybind = ctrl+space>x=close_surface
 
 quit-after-last-window-closed = true
