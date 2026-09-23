@@ -4,6 +4,11 @@
 export EDITOR=nvim
 export VISUAL=nvim
 
+if (( $+commands[bat] )); then
+  export BAT_THEME='Catppuccin Mocha'
+  export MANPAGER="sh -c 'col -bx | bat -plman --color=always | less -R'"
+fi
+
 # Keep history in the XDG state directory.
 HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 HISTSIZE=1000
