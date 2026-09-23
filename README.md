@@ -68,3 +68,10 @@ prompt. Run `project-open --help` for a short usage reminder.
 
 The first Codex CLI launch may ask you to sign in with ChatGPT. Ghostty may
 also ask macOS for Automation permission when the launcher opens its windows.
+
+To start a new project, run `project-new` and enter a name when prompted, or
+pass the name directly, for example `project-new my-dashboard`. It creates
+`~/code/my-dashboard` and opens that directory with `project-open`. Names use
+lowercase letters, digits, dots, hyphens, and underscores; an existing project
+directory is never reused or overwritten. The new directory starts empty, so
+the server pane waits at a shell prompt until the project has a dev server.

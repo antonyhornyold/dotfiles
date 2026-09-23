@@ -1,0 +1,46 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+  printf 'Usage: project-new [name]\n'
+  printf 'Create ~/code/<name> and open it with project-open.\n'
+}
+
+if [[ ${1:-} == --help ]]; then
+  usage
+  exit 0
+fi
+if (( $# > 1 )); then
+  usage >&2
+  exit 2
+fi
+
+if (( $# == 1 )); then
+  project_name=$1
+elif ! IFS= read -r -p 'Project name: ' project_name; then
+  printf '\nproject-new: no project name was entered.\n' >&2
+  exit 1
+fi
+
+# Lowercase names also work as npm package names and avoid path surprises.
+if [[ ! $project_name =~ ^[a-z0-9][a-z0-9._-]*$ || $project_name == . || $project_name == .. ]]; then
+  printf 'project-new: use a lowercase name starting with a letter or digit; then letters, digits, dots, hyphens, or underscores.\n' >&2
+  exit 2
+fi
+
+if ! command -v project-open >/dev/null 2>&1; then
+  printf 'project-new: project-open is not on PATH. Open a new shell first.\n' >&2
+  exit 1
+fi
+
+projects_dir="$HOME/code"
+project_dir="$projects_dir/$project_name"
+if [[ -e $project_dir ]]; then
+  printf 'project-new: project already exists: %s\n' "$project_dir" >&2
+  exit 1
+fi
+
+mkdir -p "$projects_dir"
+mkdir "$project_dir"
+printf 'Created %s\n' "$project_dir"
+exec project-open "$project_dir"
