@@ -53,7 +53,8 @@ nvim-ts-autotag, Mason, nvim-lspconfig, mason-lspconfig, Conform, nvim-lint,
 tiny-cmdline, and fzf-lua.
 The statusline and floating terminal are configured locally without plugins.
 oil-git-status shows staged and working-tree Git status in Oil's two sign
-columns; ignored files are excluded from its status display.
+columns. Oil hides Git-ignored files and untracked dotfiles by default, while
+tracked dotfiles remain visible. Press `g.` in Oil to reveal hidden entries.
 
 | Purpose | Tools |
 | --- | --- |
