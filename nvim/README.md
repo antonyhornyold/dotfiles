@@ -59,7 +59,7 @@ tracked dotfiles remain visible. Press `g.` in Oil to reveal hidden entries.
 | Purpose | Tools |
 | --- | --- |
 | LSP via Mason | Lua, TypeScript/JavaScript, HTML, CSS, JSON, Tailwind CSS |
-| Format on save via Conform | Prettier (HTML/CSS/JS/TS), StyLua (Lua), shfmt (Zsh) |
+| Format on save via Conform | Prettier (HTML, CSS, SCSS, JS, TS, JSON, JSONC, Markdown, MDX, YAML), StyLua (Lua), shfmt (Zsh) |
 | Lint via nvim-lint | luacheck (Lua), Zsh's built-in syntax check, HTMLHint (HTML), project-local Stylelint (CSS) and ESLint (JS/TS) |
 | Treesitter | HTML, JavaScript, and TSX parsers for tag handling |
 
