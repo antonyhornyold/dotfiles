@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   printf 'Usage: project-new [name]\n'
-  printf 'Create ~/code/<name> and open it with project-open.\n'
+  printf 'Create a Git repo at ~/code/<name> and open it with project-open.\n'
 }
 
 if [[ ${1:-} == --help ]]; then
@@ -32,6 +32,10 @@ if ! command -v project-open >/dev/null 2>&1; then
   printf 'project-new: project-open is not on PATH. Open a new shell first.\n' >&2
   exit 1
 fi
+if ! command -v git >/dev/null 2>&1; then
+  printf 'project-new: Git is not on PATH.\n' >&2
+  exit 1
+fi
 
 projects_dir="$HOME/code"
 project_dir="$projects_dir/$project_name"
@@ -42,5 +46,6 @@ fi
 
 mkdir -p "$projects_dir"
 mkdir "$project_dir"
+git -C "$project_dir" init -q --initial-branch=main
 printf 'Created %s\n' "$project_dir"
 exec project-open "$project_dir"
