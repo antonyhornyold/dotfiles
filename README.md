@@ -45,7 +45,8 @@ Homebrew may first ask to install Apple's Command Line Tools.
    `.nvmrc` to select another Node version.
 4. Starts Neovim to install plugins from `nvim/nvim-pack-lock.json`, its Mason
    tools, and the configured Treesitter parsers.
-5. Checks that the Brewfile is satisfied and Zsh uses the expected `ZDOTDIR`.
+5. Verifies the Catppuccin Mocha Lazygit configuration, checks that the
+   Brewfile is satisfied, and confirms Zsh uses the expected `ZDOTDIR`.
 
 The script is safe to rerun after a failed or partial setup. It does not create
 project-specific database connections or store credentials. Each SQL project

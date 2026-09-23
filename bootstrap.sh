@@ -21,7 +21,7 @@ if [[ ${1:-} == --help ]]; then
 fi
 [[ $# -eq 0 ]] || die 'No arguments are supported; use --help for usage.'
 [[ $(uname -s) == Darwin ]] || die 'This bootstrap script is for macOS.'
-[[ -f "$config_dir/Brewfile" && -d "$config_dir/zsh" && -f "$config_dir/nvim/init.lua" ]] ||
+[[ -f "$config_dir/Brewfile" && -d "$config_dir/zsh" && -f "$config_dir/nvim/init.lua" && -f "$config_dir/lazygit/config.yml" ]] ||
   die 'Clone the dotfiles repository into ~/.config before running this script.'
 
 export XDG_CONFIG_HOME="$config_dir"
@@ -90,9 +90,10 @@ nvim -i NONE --headless \
   '+lua local r = require("mason-registry"); for _, name in ipairs({"lua-language-server", "typescript-language-server", "html-lsp", "css-lsp", "json-lsp", "tailwindcss-language-server", "postgres-language-server", "prettier", "stylua", "shfmt", "htmlhint"}) do assert(r.is_installed(name), "Mason package missing: " .. name) end; assert(vim.treesitter.language.add("sql"), "SQL parser missing")' \
   +qa
 
-log 'Verify Zsh routing and Brewfile packages'
+log 'Verify Zsh routing, Lazygit configuration, and Brewfile packages'
 actual_zdotdir=$(/bin/zsh -lc 'print -r -- "$ZDOTDIR"')
 [[ "$actual_zdotdir" == "$config_dir/zsh" ]] || die "Zsh reported ZDOTDIR=$actual_zdotdir"
+lazygit --use-config-file="$config_dir/lazygit/config.yml" --config >/dev/null
 "$brew_bin" bundle check --file="$config_dir/Brewfile"
 
 log 'Bootstrap complete. Open a new terminal to load the Zsh configuration.'

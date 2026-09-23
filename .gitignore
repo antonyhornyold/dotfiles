@@ -9,5 +9,6 @@
 !/zsh/
 !/git/
 !/bat/
+!/lazygit/
 /nvim/nvim.log
 /**/.DS_Store
