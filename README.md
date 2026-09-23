@@ -69,6 +69,15 @@ prompt. Run `project-open --help` for a short usage reminder.
 The first Codex CLI launch may ask you to sign in with ChatGPT. Ghostty may
 also ask macOS for Automation permission when the launcher opens its windows.
 
+From anywhere inside the project's Git repository, run `project-close` to
+close every Ghostty window created for that project by `project-open`. You can
+also pass a project directory, such as `project-close ~/code/my-dashboard`.
+Ghostty may ask you to confirm closing windows that still have running programs
+or unsaved editor work. Closing the panes ends their terminal processes; it
+does not stop separately managed services such as Homebrew PostgreSQL.
+Windows opened by older versions of `project-open` have no project label and
+must be closed manually.
+
 To start a new project, run `project-new` and enter a name when prompted, or
 pass the name directly, for example `project-new my-dashboard`. It creates
 `~/code/my-dashboard`, initializes a local Git repository on `main`, and opens

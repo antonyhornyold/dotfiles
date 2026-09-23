@@ -1,0 +1,46 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+  printf 'Usage: project-close [project-directory]\n'
+  printf 'Close the Ghostty windows opened by project-open for this project.\n'
+}
+
+if [[ ${1:-} == --help ]]; then
+  usage
+  exit 0
+fi
+if (( $# > 1 )); then
+  usage >&2
+  exit 2
+fi
+
+project_dir=${1:-.}
+if [[ ! -d $project_dir ]]; then
+  printf 'project-close: directory does not exist: %s\n' "$project_dir" >&2
+  exit 1
+fi
+project_dir=$(cd -- "$project_dir" && pwd -P)
+if git_root=$(git -C "$project_dir" rev-parse --show-toplevel 2>/dev/null); then
+  project_dir=$git_root
+fi
+
+script="${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/project-close.applescript"
+if [[ ! -f $script ]]; then
+  printf 'project-close: missing Ghostty script: %s\n' "$script" >&2
+  exit 1
+fi
+
+project_tag="project-open-$(/sbin/md5 -q -s "$project_dir")"
+window_count=$(/usr/bin/osascript "$script" count "$project_tag")
+if [[ ! $window_count =~ ^[0-9]+$ ]]; then
+  printf 'project-close: could not identify project windows.\n' >&2
+  exit 1
+fi
+if (( window_count == 0 )); then
+  printf 'project-close: no project-open windows found for %s.\n' "$project_dir"
+  exit 0
+fi
+
+printf 'Closing %s Ghostty window(s) for %s.\n' "$window_count" "$project_dir"
+/usr/bin/osascript "$script" close "$project_tag" >/dev/null

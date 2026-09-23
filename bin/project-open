@@ -21,6 +21,7 @@ if [[ ! -d $project_dir ]]; then
   exit 1
 fi
 project_dir=$(cd -- "$project_dir" && pwd -P)
+project_tag="project-open-$(/sbin/md5 -q -s "$project_dir")"
 
 if [[ ! -d /Applications/Ghostty.app ]]; then
   printf 'project-open: Ghostty is not installed in /Applications.\n' >&2
@@ -40,10 +41,11 @@ if [[ -f $project_dir/package.json ]] && command -v node >/dev/null 2>&1 && comm
   fi
 fi
 
-osascript - "$project_dir" "$start_server" <<'APPLESCRIPT'
+osascript - "$project_dir" "$start_server" "$project_tag" <<'APPLESCRIPT'
 on run argv
     set projectDir to item 1 of argv
     set startServer to item 2 of argv is "true"
+    set projectTag to item 3 of argv
 
     tell application "Ghostty"
         activate
@@ -53,10 +55,12 @@ on run argv
         set workWin to new window with configuration cfg
         set editorPane to terminal 1 of selected tab of workWin
         set codexPane to split editorPane direction right with configuration cfg
+        perform action ("set_tab_title:" & projectTag & "-work") on editorPane
 
         set serverWin to new window with configuration cfg
         set serverPane to terminal 1 of selected tab of serverWin
         set terminalPane to split serverPane direction right with configuration cfg
+        perform action ("set_tab_title:" & projectTag & "-server") on serverPane
 
         input text "nvim ." to editorPane
         send key "enter" to editorPane
