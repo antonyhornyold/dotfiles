@@ -2,7 +2,10 @@ vim.g.mapleader = " "
 
 require("config.options")
 require("vim._core.ui2").enable({})
-vim.g.tiny_cmdline = { native_types = {} }
+vim.g.tiny_cmdline = {
+  native_types = {},
+  position = { x = "50%", y = "25%" },
+}
 require("config.plugins")
 require("config.cmdline")
 require("config.colorscheme")
