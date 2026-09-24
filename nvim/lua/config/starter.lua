@@ -25,6 +25,8 @@ local function add_border(content)
       break
     end
   end
+  local header = table.remove(content, 1)
+  table.remove(content, 1)
 
   local width = 38
   for _, line in ipairs(content) do
@@ -37,18 +39,14 @@ local function add_border(content)
 
   for _, line in ipairs(content) do
     local text_width = line_width(line)
-    local padding = width - text_width - 4
-    local left = 2
-    if line[1] and line[1].type == "header" then
-      left = left + math.floor(padding / 2)
-    end
-
-    table.insert(line, 1, border("│" .. string.rep(" ", left)))
-    table.insert(line, border(string.rep(" ", width - text_width - left - 2) .. "│"))
+    table.insert(line, 1, border("│  "))
+    table.insert(line, border(string.rep(" ", width - text_width - 4) .. "│"))
   end
 
   table.insert(content, 1, { border("╭" .. string.rep("─", width - 2) .. "╮") })
   table.insert(content, { border("╰" .. string.rep("─", width - 2) .. "╯") })
+  table.insert(content, 1, { { string = "", type = "empty" } })
+  table.insert(content, 1, header)
   table.insert(content, { { string = "", type = "empty" } })
   vim.list_extend(content, footer)
   return content
@@ -59,8 +57,14 @@ local function center_lines(content)
   for _, line in ipairs(content) do
     width = math.max(width, line_width(line))
   end
+  local box_width = line_width(content[3])
+  local box_left = math.floor((width - box_width) / 2)
   for _, line in ipairs(content) do
-    table.insert(line, 1, { string = string.rep(" ", math.floor((width - line_width(line)) / 2)), type = "empty" })
+    local left = box_left
+    if line[1] and line[1].type == "header" then
+      left = left + math.floor((box_width - line_width(line)) / 2)
+    end
+    table.insert(line, 1, { string = string.rep(" ", left), type = "empty" })
   end
   return content
 end
