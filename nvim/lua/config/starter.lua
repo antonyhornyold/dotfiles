@@ -1,6 +1,6 @@
 local starter = require("mini.starter")
 local fzf = require("fzf-lua")
-local recent_files = starter.sections.recent_files(5, false, false)
+local recent_files = starter.sections.recent_files(6, false, false)
 
 local function recent_items()
   local items = recent_files()
