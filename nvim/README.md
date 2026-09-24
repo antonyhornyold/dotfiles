@@ -12,6 +12,7 @@ an item with its highlighted prefix or the arrow keys, then press Enter.
 | Keys | Action |
 | --- | --- |
 | `jk` (Insert) | Return to Normal mode |
+| `<M-l>` (Insert; left Option + L in Ghostty) | Move past adjacent closing quotes and brackets |
 | `-` | Open Oil's floating file explorer (`q` closes it) |
 | `<leader>go` | Toggle mini.diff's in-buffer change overlay |
 | `<leader>t` | Toggle the floating terminal (`<C-q>` closes it) |
