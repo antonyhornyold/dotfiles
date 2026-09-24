@@ -19,6 +19,7 @@ require("config.keymaps")
 require("config.terminal")
 require("config.clue")
 require("config.statusline")
+require("config.starter")
 
 local reload_group = vim.api.nvim_create_augroup("ReloadStatusline", { clear = true })
 

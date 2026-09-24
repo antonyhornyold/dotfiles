@@ -8,6 +8,12 @@ require("catppuccin").setup({
   custom_highlights = function(colors)
     return {
       OilFloatTop = { fg = colors.surface2, bg = colors.none },
+      MiniStarterBorder = { fg = colors.surface1 },
+      MiniStarterHeader = { fg = colors.blue, bold = true },
+      MiniStarterSection = { fg = colors.subtext0, bold = true },
+      MiniStarterItem = { fg = colors.subtext0 },
+      MiniStarterCurrent = { fg = colors.text, bold = true },
+      MiniStarterItemPrefix = { fg = colors.lavender },
     }
   end,
 })

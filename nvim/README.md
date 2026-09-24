@@ -3,6 +3,10 @@
 Personal Neovim 0.12 config. `init.lua` loads the modules in `lua/config/`;
 `snippets/` contains language-specific snippets. The leader key is Space.
 
+Launching `nvim` without a file opens a mini.starter page with file search,
+project text search, Oil, a new buffer, the config, and recent files. Select
+an item with its highlighted prefix or the arrow keys, then press Enter.
+
 ## Editing keys
 
 | Keys | Action |
@@ -48,7 +52,7 @@ mini.clue shows key hints after Space in Normal or Visual mode and after `[`,
 
 Plugins are declared in `lua/config/plugins.lua` and installed by Neovim's
 `vim.pack`. They are Catppuccin, Oil, oil-git-status, mini.nvim (icons, pairs,
-diff, surround, completion, snippets, keymap, clue), nvim-treesitter,
+diff, surround, completion, snippets, keymap, clue, starter), nvim-treesitter,
 nvim-ts-autotag, Mason, nvim-lspconfig, mason-lspconfig, Conform, nvim-lint,
 tiny-cmdline, and fzf-lua.
 The statusline and floating terminal are configured locally without plugins.
