@@ -13,6 +13,7 @@ an item with its highlighted prefix or the arrow keys, then press Enter.
 | --- | --- |
 | `jk` (Insert) | Return to Normal mode |
 | `-` | Open Oil's floating file explorer (`q` closes it) |
+| `<leader>go` | Toggle mini.diff's in-buffer change overlay |
 | `<leader>t` | Toggle the floating terminal (`<C-q>` closes it) |
 | `<leader>cf` (Normal/Visual) | Format buffer or selection |
 | `<leader>ca` (Normal/Visual) | LSP code action |
@@ -47,7 +48,8 @@ or loop and its body. Use them with operators such as `d`, `c`, `y`, or `v`.
 mini.ai's next-object variants use `aN`/`iN`, leaving Neovim's `an`/`in`
 selections available.
 
-mini.diff shows Git changes in the number column. `]h` / `[h` move between
+mini.diff shows Git changes in the number column. `<leader>go` toggles an
+overlay showing the changed and deleted text. `]h` / `[h` move between
 hunks; `]H` / `[H` go to the last / first hunk. `ghgh` stages the current
 hunk and `gHgh` resets it; `gh` / `gH` also work on a Visual selection. Reset
 discards the affected buffer changes.

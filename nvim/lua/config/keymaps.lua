@@ -7,6 +7,13 @@ vim.keymap.set("n", "-", "<cmd>Oil --float<CR>", {
   desc = "Open floating file explorer",
 })
 
+vim.keymap.set("n", "<leader>go", function()
+  local diff = require("mini.diff")
+  if diff.get_buf_data(0) then
+    diff.toggle_overlay(0)
+  end
+end, { desc = "Toggle Git diff overlay" })
+
 vim.keymap.set({ "n", "v" }, "<leader>cf", function()
   require("conform").format({ async = true })
 end, { desc = "Format buffer or selection" })
