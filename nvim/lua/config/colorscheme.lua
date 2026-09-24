@@ -10,7 +10,6 @@ require("catppuccin").setup({
       OilFloatTop = { fg = colors.surface2, bg = colors.none },
       MiniStarterBorder = { fg = colors.surface1 },
       MiniStarterHeader = { fg = colors.blue, bold = true },
-      MiniStarterFooter = { fg = colors.overlay2 },
       MiniStarterSection = { fg = colors.subtext0, bold = true },
       MiniStarterItem = { fg = colors.subtext0 },
       MiniStarterCurrent = { fg = colors.text, bold = true },

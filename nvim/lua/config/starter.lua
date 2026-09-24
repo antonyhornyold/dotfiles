@@ -47,8 +47,10 @@ local function add_border(content)
   table.insert(content, { border("╰" .. string.rep("─", width - 2) .. "╯") })
   table.insert(content, 1, { { string = "", type = "empty" } })
   table.insert(content, 1, header)
-  table.insert(content, { { string = "", type = "empty" } })
-  vim.list_extend(content, footer)
+  if #footer > 0 then
+    table.insert(content, { { string = "", type = "empty" } })
+    vim.list_extend(content, footer)
+  end
   return content
 end
 
@@ -71,6 +73,7 @@ end
 
 starter.setup({
   header = "Neovim",
+  footer = "",
   items = {
     { name = "Find file", action = fzf.files, section = "Open" },
     { name = "Search text", action = fzf.live_grep, section = "Open" },
