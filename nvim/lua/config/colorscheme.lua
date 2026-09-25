@@ -7,6 +7,9 @@ require("catppuccin").setup({
   transparent_background = true,
   custom_highlights = function(colors)
     return {
+      InsertCursor = { bg = colors.lavender },
+      ReplaceCursor = { bg = colors.red },
+      VisualCursor = { bg = colors.mauve },
       OilFloatTop = { fg = colors.surface2, bg = colors.none },
       MiniStarterBorder = { fg = colors.surface1 },
       MiniStarterHeader = { fg = colors.blue, bold = true },

@@ -29,6 +29,14 @@ opt.cmdheight = 0 -- Give the floating command line the full editor height
 
 vim.o.cursorline = true
 vim.o.cursorlineopt = "both"
+opt.guicursor = table.concat({
+  "n-c-sm:block-blinkon0",
+  "i-ci:ver25-blinkon0-InsertCursor",
+  "r-cr:hor20-blinkon0-ReplaceCursor",
+  "v-ve:hor35-blinkon0-VisualCursor",
+  "o:hor20-blinkon0",
+  "t:block-blinkon500-blinkoff500-TermCursor",
+}, ",")
 
 -- Mark screen column 100 only on the current line, once it reaches that width.
 -- A virtual-column pattern keeps the marker aligned with tabs and wide characters.
