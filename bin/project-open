@@ -62,7 +62,7 @@ on run argv
         set terminalPane to split serverPane direction right with configuration cfg
         perform action ("set_tab_title:" & projectTag & "-server") on serverPane
 
-        input text "nvim ." to editorPane
+        input text "nvim" to editorPane
         send key "enter" to editorPane
         input text "codex" to codexPane
         send key "enter" to codexPane

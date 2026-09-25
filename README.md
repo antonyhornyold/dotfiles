@@ -62,8 +62,11 @@ update commands.
 From a project directory, run `project-open`. To open a different directory,
 run `project-open ~/Projects/my-app`. The launcher opens two Ghostty windows:
 Neovim and Codex side by side in the first, and a development server pane plus
-a plain terminal in the second. It starts `npm run dev` only when the project
-has a `dev` script in `package.json`; otherwise the server pane stays at a shell
+a plain terminal in the second. Neovim opens on its start page in the project
+directory. To move from Neovim to the Codex pane, press Ctrl-Space, then `l`
+(Ghostty split navigation); `<C-w>l` only moves between Neovim windows.
+The launcher starts `npm run dev` only when the project has a `dev` script in
+`package.json`; otherwise the server pane stays at a shell
 prompt. Run `project-open --help` for a short usage reminder.
 
 The first Codex CLI launch may ask you to sign in with ChatGPT. Ghostty may
