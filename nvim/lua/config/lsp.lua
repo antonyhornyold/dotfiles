@@ -1,3 +1,5 @@
+vim.lsp.document_color.enable(true, nil, { style = "virtual" })
+
 vim.lsp.config("lua_ls", {
   settings = {
     Lua = {

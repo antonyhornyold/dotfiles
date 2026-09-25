@@ -78,6 +78,9 @@ tracked dotfiles remain visible. Press `g.` in Oil to reveal hidden entries.
 | Lint via nvim-lint | luacheck (Lua), Zsh's built-in syntax check, HTMLHint (HTML), project-local Stylelint (CSS) and ESLint (JS/TS) |
 | Treesitter | HTML, JavaScript, TypeScript, TSX, Lua, and SQL parsers |
 
+LSP document colours appear as inline swatches where a language server provides
+them, rather than colouring the value's background.
+
 ESLint and Stylelint run only when their config file and executable are found
 in the project. Linting runs on buffer entry and after save. Mason provides the
 configured language servers and can install Prettier, StyLua, shfmt, and
