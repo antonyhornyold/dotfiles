@@ -21,6 +21,32 @@ vim.keymap.set("n", "-", "<cmd>Oil --float<CR>", {
   desc = "Open floating file explorer",
 })
 
+vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
+vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
+vim.keymap.set("x", "<", "<gv", { desc = "Outdent and reselect" })
+vim.keymap.set("x", ">", ">gv", { desc = "Indent and reselect" })
+
+vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines without moving cursor" })
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center cursor" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
+vim.keymap.set("n", "n", "nzzzv", { desc = "Next search match centered" })
+vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search match centered" })
+
+vim.keymap.set("n", "<leader>ch", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
+
+vim.keymap.set("n", "<leader>s", function()
+  local word = vim.fn.expand("<cword>")
+  if word == "" then return end
+
+  vim.ui.input({ prompt = "Replace '" .. word .. "' with: " }, function(replacement)
+    if replacement == nil then return end
+
+    local pattern = vim.fn.escape(word, [[\/]])
+    local substitute = vim.fn.escape(replacement, [[\/&|]])
+    vim.cmd("%s/\\V\\<" .. pattern .. "\\>/" .. substitute .. "/gcI")
+  end)
+end, { desc = "Replace word in buffer with confirmation" })
+
 vim.keymap.set("n", "<leader>go", function()
   local diff = require("mini.diff")
   if diff.get_buf_data(0) then

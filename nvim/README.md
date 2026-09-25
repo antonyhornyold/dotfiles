@@ -13,6 +13,13 @@ an item with its highlighted prefix or the arrow keys, then press Enter.
 | --- | --- |
 | `jk` (Insert) | Return to Normal mode |
 | `<M-l>` (Insert; left Option + L in Ghostty) | Move past adjacent closing quotes and brackets |
+| `J` (Normal) | Join lines without moving the cursor (uses mark `z`) |
+| `J` / `K` (Visual) | Move selected lines down / up and keep the selection |
+| `<` / `>` (Visual) | Outdent / indent and keep the selection |
+| `<C-d>` / `<C-u>` | Scroll down / up half a screen and centre the cursor |
+| `n` / `N` | Next / previous search match, centred with folds opened |
+| `<leader>ch` | Clear search highlighting |
+| `<leader>s` | Replace the word under the cursor throughout the buffer, confirming each match |
 | `-` | Open Oil's floating file explorer (`q` closes it) |
 | `<leader>go` | Toggle mini.diff's in-buffer change overlay |
 | `<leader>t` | Toggle the floating terminal (`<C-q>` closes it) |
