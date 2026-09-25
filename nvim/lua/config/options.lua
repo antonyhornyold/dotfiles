@@ -31,7 +31,7 @@ vim.o.cursorline = true
 vim.o.cursorlineopt = "both"
 opt.guicursor = table.concat({
   "n-c-sm:block-blinkon0",
-  "i-ci:ver25-blinkon0-InsertCursor",
+  "i-ci:ver25-blinkwait500-blinkon500-blinkoff500-InsertCursor",
   "r-cr:hor20-blinkon0-ReplaceCursor",
   "v-ve:hor35-blinkon0-VisualCursor",
   "o:hor20-blinkon0",

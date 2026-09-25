@@ -81,9 +81,9 @@ tracked dotfiles remain visible. Press `g.` in Oil to reveal hidden entries.
 LSP document colours appear as inline swatches where a language server provides
 them, rather than colouring the value's background.
 
-The cursor is a steady reverse-colour block in Normal mode, a lavender vertical
-bar in Insert mode, a red underline in Replace mode, and a thicker mauve
-underline in Visual mode.
+The cursor is a steady reverse-colour block in Normal mode, a slowly blinking
+lavender vertical bar in Insert mode, a steady red underline in Replace mode,
+and a steady, thicker mauve underline in Visual mode.
 
 ESLint and Stylelint run only when their config file and executable are found
 in the project. Linting runs on buffer entry and after save. Mason provides the
