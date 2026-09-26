@@ -43,6 +43,8 @@ completion item, advances an active snippet, or expands a matching snippet.
 and otherwise uses mini.pairs' Enter behavior. `<C-y>` also accepts an item;
 `<C-e>` cancels the menu. `<C-j>` expands a snippet trigger directly,
 `<C-l>` / `<C-h>` move through its placeholders, and `<C-c>` stops the session.
+Press `<C-g>` then `<C-j>` in Insert mode to browse all snippets available in
+the current context, regardless of the text before the cursor.
 
 mini.surround uses `sa` to add, `sd` to delete, and `cs` to change a surrounding.
 For example, `saiw)` wraps a word in parentheses and `cs)(` changes `(word)`

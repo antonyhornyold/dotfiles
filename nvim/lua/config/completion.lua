@@ -13,6 +13,10 @@ snippets.setup({
   },
 })
 
+vim.keymap.set("i", "<C-g><C-j>", function()
+  snippets.expand({ match = false })
+end, { desc = "Browse available snippets" })
+
 snippets.start_lsp_server({ match = false })
 require("mini.completion").setup()
 
