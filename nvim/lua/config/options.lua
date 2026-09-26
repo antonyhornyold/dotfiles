@@ -7,6 +7,16 @@ opt.fillchars:append({ eob = " " })
 opt.number = true
 opt.relativenumber = true
 
+-- Use absolute numbers while typing; preserve unnumbered plugin windows.
+vim.api.nvim_create_autocmd({ "ModeChanged", "WinEnter", "BufWinEnter" }, {
+  group = vim.api.nvim_create_augroup("ModeLineNumbers", { clear = true }),
+  callback = function()
+    if not vim.wo.number or vim.bo.buftype ~= "" then return end
+    local mode = vim.api.nvim_get_mode().mode
+    vim.wo.relativenumber = not mode:match("^[iR]")
+  end,
+})
+
 -- Two-space indentation
 opt.tabstop = 2
 opt.shiftwidth = 2

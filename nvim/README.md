@@ -88,6 +88,9 @@ tracked dotfiles remain visible. Press `g.` in Oil to reveal hidden entries.
 LSP document colours appear as inline swatches where a language server provides
 them, rather than colouring the value's background.
 
+Line numbers are absolute in Insert and Replace modes, and hybrid in Normal
+mode: the current line shows its absolute number, with relative numbers around it.
+
 The cursor is a steady reverse-colour block in Normal mode, a slowly blinking
 lavender vertical bar in Insert mode, a steady red underline in Replace mode,
 and a steady, thicker mauve underline in Visual mode.
