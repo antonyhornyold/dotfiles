@@ -7,6 +7,7 @@ require("catppuccin").setup({
   transparent_background = true,
   custom_highlights = function(colors)
     return {
+      LineNr = { fg = colors.overlay1 },
       InsertCursor = { bg = colors.lavender },
       ReplaceCursor = { bg = colors.red },
       VisualCursor = { bg = colors.mauve },
