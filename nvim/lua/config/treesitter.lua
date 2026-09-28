@@ -1,5 +1,5 @@
 -- Tag completion needs a parser for the current filetype (e.g. html or tsx).
-require("nvim-treesitter").install({ "dockerfile", "html", "javascript", "typescript", "tsx", "sql", "yaml" })
+require("nvim-treesitter").install({ "dockerfile", "html", "javascript", "typescript", "tsx", "sql", "yaml", "prisma" })
 
 require("nvim-ts-autotag").setup({
   opts = {
@@ -25,6 +25,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "lua",
     "sql",
     "yaml",
+    "prisma",
   },
   callback = function(args)
     local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
