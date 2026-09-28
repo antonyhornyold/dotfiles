@@ -14,6 +14,9 @@ HISTSIZE=1000
 SAVEHIST=1000
 setopt SHARE_HISTORY HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS HIST_VERIFY
 
+# Docker Desktop provides completions here for Docker and its CLI plugins.
+fpath=("$HOME/.docker/completions" $fpath)
+
 autoload -Uz compinit
 zsh_compdump="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 mkdir -p -- "${zsh_compdump:h}"

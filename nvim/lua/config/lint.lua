@@ -9,6 +9,7 @@ lint.linters_by_ft = {
   typescript = { "eslint" },
   javascriptreact = { "eslint" },
   typescriptreact = { "eslint" },
+  dockerfile = { "hadolint" },
 }
 
 -- Neovim provides `vim` at runtime, so it is not an undefined global.

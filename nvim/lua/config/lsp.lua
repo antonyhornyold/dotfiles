@@ -19,6 +19,7 @@ require("mason-lspconfig").setup({
     "jsonls",
     "tailwindcss",
     "postgres_lsp",
+    "docker_language_server",
   },
   automatic_enable = {
     "lua_ls",
@@ -28,5 +29,6 @@ require("mason-lspconfig").setup({
     "jsonls",
     "tailwindcss",
     "postgres_lsp",
+    "docker_language_server",
   },
 })

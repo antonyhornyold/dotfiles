@@ -15,6 +15,7 @@ brew "luacheck"
 brew "tree-sitter-cli"
 brew "postgresql@18", link: true
 brew "pgformatter"
+brew "hadolint"
 brew "zsh-autosuggestions"
 brew "zsh-vi-mode"
 brew "zsh-fast-syntax-highlighting"
