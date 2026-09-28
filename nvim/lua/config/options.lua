@@ -26,6 +26,7 @@ opt.expandtab = true
 -- Useful editing defaults
 opt.wrap = false
 opt.signcolumn = "yes" -- Prevent the text moving when diagnostics appear
+opt.statuscolumn = "%s%=%l " -- Keep signs and right-align both absolute and relative numbers
 vim.diagnostic.config({ virtual_text = { current_line = true, spacing = 2 } })
 opt.scrolloff = 5 -- Keep five lines visible around the cursor
 opt.sidescrolloff = 5
