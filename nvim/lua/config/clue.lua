@@ -10,6 +10,8 @@ clue.setup({
   clues = {
     clue.gen_clues.square_brackets(),
     clue.gen_clues.windows(),
+    { mode = "n", keys = "<Leader>g", desc = "Toggle Git diff overlay" },
+    { mode = "n", keys = "<Leader>r", desc = "Rename symbol" },
   },
   window = {
     config = {
