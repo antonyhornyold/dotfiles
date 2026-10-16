@@ -38,3 +38,6 @@ keybind = ctrl+space>z=toggle_split_zoom
 keybind = ctrl+space>x=close_surface
 
 quit-after-last-window-closed = true
+
+# Notify when an update is available; install it only when chosen.
+auto-update = check
