@@ -4,7 +4,7 @@
 export EDITOR=nvim
 export VISUAL=nvim
 
-if (( $+commands[bat] )); then
+if (($+commands[bat])); then
   export MANPAGER="sh -c 'col -bx | bat -plman --color=always | less -R'"
 fi
 
@@ -18,6 +18,7 @@ setopt SHARE_HISTORY HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS HIST_VERIFY
 fpath=("$HOME/.docker/completions" $fpath)
 
 autoload -Uz compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zsh_compdump="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 mkdir -p -- "${zsh_compdump:h}"
 compinit -d "$zsh_compdump"
