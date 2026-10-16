@@ -39,3 +39,22 @@ zsh-tools-update() {
 
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+
+# Use Graffiti Archive's pinned Node version when entering its directory tree.
+autoload -Uz add-zsh-hook
+_graffiti_archive_node() {
+  local repo="$HOME/Code/Graffiti_Archive"
+  [[ "$PWD" == "$repo" || "$PWD" == "$repo"/* ]] || return 0
+  (( $+functions[nvm] )) || return 0
+  [[ -r "$repo/.nvmrc" ]] || return 0
+
+  local requested="$(<"$repo/.nvmrc")"
+  local resolved="$(nvm version "$requested")"
+  if [[ "$resolved" == "N/A" ]]; then
+    print -u2 -- "Graffiti Archive needs Node $requested. Run: nvm install $requested"
+    return 0
+  fi
+  [[ "$(nvm current)" == "$resolved" ]] || nvm use --silent "$requested"
+}
+add-zsh-hook chpwd _graffiti_archive_node
+_graffiti_archive_node
