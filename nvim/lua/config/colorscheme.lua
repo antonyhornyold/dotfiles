@@ -18,6 +18,8 @@ require("catppuccin").setup({
       MiniStarterItem = { fg = colors.subtext0 },
       MiniStarterCurrent = { fg = colors.text, bold = true },
       MiniStarterItemPrefix = { fg = colors.lavender },
+      MiniClueNextKey = { fg = colors.peach },
+      MiniClueNextKeyWithPostkeys = { fg = colors.peach },
       MiniClueSeparator = { fg = colors.surface2 },
     }
   end,
