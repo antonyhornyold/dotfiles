@@ -17,6 +17,7 @@ clue.setup({
       row = "auto",
       col = 0,
       width = vim.o.columns - 2,
+      border = "none",
       title = "",
     },
   },
