@@ -13,6 +13,21 @@ vim.pack.add({
   "https://github.com/mfussenegger/nvim-lint",
   "https://github.com/rachartier/tiny-cmdline.nvim",
   "https://github.com/ibhagwan/fzf-lua",
+  "https://github.com/folke/zen-mode.nvim",
+  "https://github.com/folke/twilight.nvim",
+})
+
+require("twilight").setup({})
+require("zen-mode").setup({
+  window = {
+    width = 110,
+    options = {
+      number = false,
+      relativenumber = false,
+      signcolumn = "no",
+    },
+  },
+  plugins = { twilight = { enabled = false } },
 })
 
 require("mini.icons").setup()

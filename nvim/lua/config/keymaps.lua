@@ -54,6 +54,9 @@ vim.keymap.set("n", "<leader>go", function()
   end
 end, { desc = "Toggle Git diff overlay" })
 
+vim.keymap.set("n", "<leader>uz", "<cmd>ZenMode<CR>", { desc = "Toggle Zen Mode" })
+vim.keymap.set("n", "<leader>ut", "<cmd>Twilight<CR>", { desc = "Toggle Twilight" })
+
 vim.keymap.set({ "n", "v" }, "<leader>cf", function()
   require("conform").format({ async = true })
 end, { desc = "Format buffer or selection" })

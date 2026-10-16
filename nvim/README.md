@@ -22,6 +22,8 @@ an item with its highlighted prefix or the arrow keys, then press Enter.
 | `<leader>s` | Replace the word under the cursor throughout the buffer, confirming each match |
 | `-` | Open Oil's floating file explorer (`q` closes it) |
 | `<leader>go` | Toggle mini.diff's in-buffer change overlay |
+| `<leader>uz` | Toggle Zen Mode (centred, distraction-free view) |
+| `<leader>ut` | Toggle Twilight (dim code outside the current context) |
 | `<leader>t` | Toggle the floating terminal (`<C-q>` closes it) |
 | `<leader>cf` (Normal/Visual) | Format buffer or selection |
 | `<leader>ca` (Normal/Visual) | LSP code action |
@@ -74,8 +76,10 @@ Plugins are declared in `lua/config/plugins.lua` and installed by Neovim's
 diff, ai, surround, completion, snippets, keymap, clue, starter),
 nvim-treesitter, nvim-treesitter-textobjects, nvim-ts-autotag, Mason,
 nvim-lspconfig, mason-lspconfig, Conform, nvim-lint,
-tiny-cmdline, and fzf-lua.
+tiny-cmdline, fzf-lua, zen-mode.nvim, and twilight.nvim.
 The statusline and floating terminal are configured locally without plugins.
+Zen Mode uses a 110-column window without line numbers or signs. Twilight
+toggles independently, so either view can be used on its own or together.
 oil-git-status shows staged and working-tree Git status in Oil's two sign
 columns. Oil hides Git-ignored files and untracked dotfiles by default, while
 tracked dotfiles remain visible. Press `g.` in Oil to reveal hidden entries.
