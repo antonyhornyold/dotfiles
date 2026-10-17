@@ -5,7 +5,9 @@ name = "terminal"
 auto_switch = false
 
 [ui]
-pane_borders = "off"
+pane_borders = "auto"
+pane_outer_borders = false
+pane_gaps = false
 tab_bar_position = "top"
 hide_tab_bar_when_single_tab = true
 tab_bar_right = [
