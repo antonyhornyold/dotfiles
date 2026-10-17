@@ -5,6 +5,7 @@ name = "terminal"
 auto_switch = false
 
 [theme.custom]
+surface_dim = "#313244"
 sidebar_bg = "#181825"
 
 [ui]
