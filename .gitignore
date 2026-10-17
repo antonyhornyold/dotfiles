@@ -21,3 +21,4 @@
 /herdr/*
 !/herdr/config.toml
 !/herdr/workspace-status.py
+!/herdr/battery-status.py
