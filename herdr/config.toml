@@ -5,6 +5,7 @@ name = "terminal"
 auto_switch = false
 
 [ui]
+accent = "#313244"
 pane_scrollbars = false
 pane_borders = "auto"
 pane_outer_borders = false
