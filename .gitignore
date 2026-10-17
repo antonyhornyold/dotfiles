@@ -15,3 +15,8 @@
 /**/.DS_Store
 /nvim/CHEATSHEET.md
 /zsh/.zcompcache/
+
+# Track Herdr settings while excluding runtime state.
+!/herdr/
+/herdr/*
+!/herdr/config.toml
