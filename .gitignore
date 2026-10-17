@@ -20,3 +20,4 @@
 !/herdr/
 /herdr/*
 !/herdr/config.toml
+!/herdr/workspace-status.py
