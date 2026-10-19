@@ -188,6 +188,11 @@ If `zsh-vi-mode` is missing, the up and down arrow keys fall back to prefix-base
 
 You normally type in **Insert mode**. Press `Esc` or `Ctrl-[` to enter **Normal mode**, edit the command with Vim keys, and press `Enter` from either mode to run it. The prompt uses `❯` in Insert mode and `❮` in Normal or Visual mode.
 
+The cursor keeps its mode-specific shape: a blinking bar in Insert mode, a
+blinking block in Normal mode, and a blinking underline while waiting for an
+operator motion. Visual and Visual Line selection modes use a steady block.
+These styles are configured through `zvm_config` in `plugins.zsh`.
+
 ### Movement and insertion
 
 | Keys | Action |
