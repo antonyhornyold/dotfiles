@@ -43,6 +43,7 @@ alias df='df -h'
 alias glog='PAGER="less -F -X" git log'
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 alias dots='git -C ~/.config'
+alias hp='herdr-project'
 
 # Git: inspect, stage, commit, and push.
 alias gs='git status --short --branch'
@@ -56,7 +57,7 @@ alias gp='git push'
 # npm: common project commands.
 alias nr='npm run'
 alias nd='npm run dev'
-alias nds='npm run dev 2>&1 | tee /tmp/graffiti-server.log | rg --line-buffered -i "Local:|Ready in|error|warn|failed|⨯|(^|[[:space:]])[45][0-9]{2}([[:space:]]|$)"'
+alias nds='project-dev'
 alias nb='npm run build'
 alias nt='npm test'
 alias ni='npm install'

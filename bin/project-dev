@@ -1,0 +1,32 @@
+#!/bin/bash
+set -uo pipefail
+
+if [[ ${1:-} == --help ]]; then
+  printf 'Usage: project-dev [npm run dev arguments...]\n'
+  printf 'Save the full dev-server log and display startup and problem lines.\n'
+  exit 0
+fi
+
+for dependency in npm rg tee shasum; do
+  if ! command -v "$dependency" >/dev/null 2>&1; then
+    printf 'project-dev: %s is required.\n' "$dependency" >&2
+    exit 1
+  fi
+done
+
+project_root=$(git rev-parse --show-toplevel 2>/dev/null) || project_root=$PWD
+project_name=$(basename "$project_root")
+project_hash=$(printf '%s' "$project_root" | shasum -a 256)
+log_dir="${XDG_STATE_HOME:-$HOME/.local/state}/herdr/logs"
+mkdir -p "$log_dir" || exit 1
+log_file="$log_dir/$project_name-${project_hash:0:8}.log"
+printf 'Full server log: %s\n' "$log_file"
+
+npm run dev -- "$@" 2>&1 |
+  tee "$log_file" |
+  rg --line-buffered -i 'Local:|Ready in|listening|server.*(started|running)|https?://localhost|error|warn|failed|⨯|(^|[[:space:]])[45][0-9]{2}([[:space:]]|$)'
+pipeline_status=("${PIPESTATUS[@]}")
+# An empty filter result is not a failed server; preserve npm/storage errors.
+if (( pipeline_status[0] != 0 )); then exit "${pipeline_status[0]}"; fi
+if (( pipeline_status[1] != 0 )); then exit "${pipeline_status[1]}"; fi
+if (( pipeline_status[2] > 1 )); then exit "${pipeline_status[2]}"; fi

@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""Create a project's two-tab Herdr layout once, then attach on later launches."""
+
+import argparse
+import json
+import os
+from pathlib import Path
+import re
+import shlex
+import shutil
+import subprocess
+import sys
+import time
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("directory", nargs="?", default=".")
+    parser.add_argument("--name", help="Override the session name derived from the repo folder")
+    parser.add_argument("--no-attach", action="store_true", help="Prepare the session without opening its terminal UI")
+    args = parser.parse_args()
+    if os.environ.get("HERDR_ENV") == "1" and not args.no_attach:
+        parser.error("run hp from a shell outside Herdr; detach first (Ctrl-B, then q)")
+
+    directory = Path(args.directory).expanduser().resolve(strict=True)
+    if not directory.is_dir():
+        parser.error("the project path must be a directory")
+    git = subprocess.run(["git", "-C", str(directory), "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+    root = Path(git.stdout.strip()).resolve() if git.returncode == 0 else directory
+    name = args.name or re.sub(r"[^A-Za-z0-9-]+", "-", root.name).strip("-")
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", name) or name == "default":
+        parser.error("use --name with 1–64 letters, digits, underscores or hyphens (not default)")
+    herdr = shutil.which("herdr")
+    if not herdr:
+        parser.error("herdr is required")
+
+    def api(*command):
+        response = subprocess.run([herdr, "--session", name, *command], check=True, capture_output=True, text=True)
+        return json.loads(response.stdout)["result"] if response.stdout.strip() else None
+
+    listing = subprocess.run([herdr, "session", "list", "--json"], check=True, capture_output=True, text=True)
+    existing = next((s for s in json.loads(listing.stdout)["sessions"] if s["name"] == name), None)
+    if existing:
+        # Inspect the saved identity before attaching; never rebuild another session.
+        state = Path(existing["session_dir"]) / "session.json"
+        if not state.exists():
+            parser.error(f"existing session {name!r} has no saved identity; inspect it manually")
+        workspaces = json.loads(state.read_text())["workspaces"]
+        if not any(Path(w["identity_cwd"]).resolve() == root for w in workspaces):
+            parser.error(f"session {name!r} belongs to another directory; choose --name")
+        if existing["running"]:
+            api("api", "snapshot")
+        print(f"Using existing session {name}; its panes and conversations are unchanged.", flush=True)
+    else:
+        for dependency in ("nvim", "codex"):
+            if not shutil.which(dependency):
+                parser.error(f"{dependency} is required")
+        dev_command = Path(__file__).resolve().with_name("project-dev")
+        if not os.access(dev_command, os.X_OK):
+            parser.error("project-dev must be installed beside herdr-project")
+        package = root / "package.json"
+        has_dev = package.exists() and bool(json.loads(package.read_text()).get("scripts", {}).get("dev"))
+
+        log_dir = Path(os.environ.get("XDG_STATE_HOME", str(Path.home() / ".local/state"))) / "herdr/logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        server_log = log_dir / f"{name}-herdr.log"
+        # The headless server keeps its panes alive when this launcher attaches/exits.
+        with server_log.open("ab") as output:
+            server = subprocess.Popen([herdr, "--session", name, "server"], cwd=root,
+                                      stdin=subprocess.DEVNULL, stdout=output, stderr=output,
+                                      start_new_session=True)
+        deadline = time.monotonic() + 15
+        snapshot = None
+        while time.monotonic() < deadline:
+            if server.poll() is not None:
+                raise RuntimeError(f"Herdr server exited; inspect {server_log}")
+            try:
+                snapshot = api("api", "snapshot")["snapshot"]
+                break
+            except subprocess.CalledProcessError:
+                time.sleep(0.1)
+        if snapshot is None:
+            raise RuntimeError(f"Herdr did not become ready; inspect {server_log}")
+        if not snapshot["workspaces"]:
+            result = api("workspace", "create", "--cwd", str(root), "--label", root.name, "--no-focus")
+            workspace = result["workspace"]["workspace_id"]
+            tab = result["tab"]["tab_id"]
+            editor = result["root_pane"]["pane_id"]
+        elif len(snapshot["workspaces"]) == len(snapshot["tabs"]) == len(snapshot["panes"]) == 1 and not snapshot["agents"]:
+            workspace = snapshot["workspaces"][0]["workspace_id"]
+            tab = snapshot["tabs"][0]["tab_id"]
+            editor = snapshot["panes"][0]["pane_id"]
+            if Path(snapshot["panes"][0]["cwd"]).resolve() != root:
+                raise RuntimeError("New session opened in an unexpected directory; inspect it manually")
+        else:
+            raise RuntimeError("Session already has content; leaving it intact for inspection")
+        api("tab", "rename", tab, "code")
+        codex = api("pane", "split", editor, "--direction", "right", "--ratio", "0.5", "--cwd", str(root), "--no-focus")["pane"]["pane_id"]
+        result = api("tab", "create", "--workspace", workspace, "--cwd", str(root), "--label", "run", "--no-focus")
+        runner = result["root_pane"]["pane_id"]
+        api("pane", "split", runner, "--direction", "right", "--ratio", "0.5", "--cwd", str(root), "--no-focus")
+        api("pane", "run", editor, "nvim .")
+        api("pane", "run", codex, "codex")
+        if has_dev:
+            api("pane", "run", runner, shlex.quote(str(dev_command)))
+        api("pane", "focus", "--direction", "right", "--pane", editor)
+        print(f"Created {name}: code (Neovim / Codex), run (dev server / shell)." if has_dev else
+              f"Created {name}: code (Neovim / Codex), run (two shells; no npm dev script).", flush=True)
+        print("Use h to find this session later.", flush=True)
+
+    if not args.no_attach:
+        os.execv(herdr, [herdr, "session", "attach", name])
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (OSError, ValueError, KeyError, RuntimeError, subprocess.CalledProcessError) as error:
+        print(f"herdr-project: {error}", file=sys.stderr)
+        if isinstance(error, subprocess.CalledProcessError) and error.stderr:
+            print(error.stderr.strip(), file=sys.stderr)
+        sys.exit(1)

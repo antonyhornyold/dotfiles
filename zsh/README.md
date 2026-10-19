@@ -75,6 +75,7 @@ Completion data is cached at `${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump`.
 | `gadog` | Decorated, one-line Git graph of all branches |
 | `dots` | Run Git against `~/.config`, for example `dots status` |
 | `h` | Search named Herdr sessions and attach to the selected session |
+| `hp [DIR]` | Create or reopen a project’s two-tab Herdr session |
 | `mkcd DIR` | Create a directory and enter it |
 | `zsh-tools-update` | Install or update tools from the Brewfile |
 
@@ -82,11 +83,14 @@ Git shortcuts: `gs` (status), `ga` (add), `gap` (interactive add), `gd` (diff), 
 
 npm shortcuts: `nr` (run), `nd` (run dev), `nb` (run build), `nt` (test), `ni` (install), and `nci` (clean install from the lockfile).
 
-`nds` runs the dev server from the current project directory, saves its complete
-output to `/tmp/graffiti-server.log`, and displays startup, warning/error and
-HTTP 4xx/5xx lines. The log is overwritten on each run. Read full messages and
-stack traces with `less -R /tmp/graffiti-server.log`; Ctrl-C stops the server as
-usual. This is a text filter, so inspect the full log when diagnosing a problem.
+`nds` runs the current project's dev server, shows startup and problem lines,
+and saves the full output (including stack traces) under
+`${XDG_STATE_HOME:-$HOME/.local/state}/herdr/logs/`. It prints the exact log path
+at startup. Logs use the repository folder name plus a path hash so projects do
+not overwrite each other's logs; each project's log is replaced on its next run.
+Use `less -R /path/printed/by/nds` to inspect it. Ctrl-C stops the server.
+This is a text filter; inspect the full log when diagnosing a problem.
+Arguments are passed through, for example `nds --port 3001`.
 
 
 Optional Zsh suffix aliases for web-development files are documented but disabled in `aliases.zsh`. When enabled, entering a filename such as `app.ts` directly at the prompt opens it in Neovim.
@@ -104,6 +108,37 @@ Useful default fzf bindings include:
 | `Alt-C` | Find and enter a directory |
 
 `Ctrl-T` previews directories with `eza` and files with `bat` when both tools are installed.
+
+## Herdr project launcher
+
+From a normal Ghostty shell outside Herdr, run `hp` in a project repository,
+or pass a directory with `hp ~/Code/my-node-app`. The launcher uses the Git
+repository root (the supplied directory when there is no repository), takes its
+folder name as the session name, and replaces spaces, dots and underscores with
+hyphens. `Graffiti_Archive`, for example, reuses `Graffiti-Archive`.
+
+A new session gets two tabs with equal left/right splits:
+
+| Tab | Left pane | Right pane |
+|---|---|---|
+| `code` | `nvim .` | `codex` |
+| `run` | Quiet `npm run dev` via `project-dev` | Shell |
+
+All panes start in the project root. Without a `dev` script, the run pane stays
+at a shell prompt. The launcher does not create a Node project, install packages,
+start Docker services or choose server ports. Prepare those first; use different
+ports if several projects run together. Codex can show its normal trust/sign-in
+prompt in a new repository.
+
+Existing sessions are inspected and reopened without rebuilding their panes or
+starting another Codex conversation. If a session name belongs to a different
+folder, the launcher refuses to reuse it; choose `hp --name another-name`.
+The reserved `default` name is never used. Use `hp --no-attach` to prepare a
+session without opening its terminal UI, and `hp --help` for options.
+If initial setup fails, the partial session is retained for inspection.
+
+Detach with Ctrl-B, then `q`. Use `h` to select a session later. The `hp` alias
+runs `~/.config/bin/herdr-project`; `nds` runs its companion `project-dev`.
 
 ## Herdr session picker
 

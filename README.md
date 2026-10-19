@@ -57,6 +57,18 @@ After bootstrap finishes, open a new terminal. See the
 [Zsh README](zsh/README.md) and [Neovim README](nvim/README.md) for usage and
 update commands.
 
+## Open a project in Herdr
+
+Run `hp` from a project repository, or `hp ~/Code/my-node-app` from a normal
+Ghostty shell. A new named Herdr session gets `code` (Neovim / Codex) and `run`
+(quiet dev server / shell) tabs, each split evenly left/right. The session name
+comes from the repository folder. Existing sessions are reopened intact.
+
+Use `h` to search sessions and `nds` to run a quiet dev server manually. Full
+server logs are separate per project under `~/.local/state/herdr/logs/` (or the
+configured `XDG_STATE_HOME`); the server prints its log path at startup.
+See [the Zsh guide](zsh/README.md#herdr-project-launcher) for setup and options.
+
 ## Open a project in Ghostty
 
 From a project directory, run `project-open`. To open a different directory,
