@@ -82,6 +82,13 @@ Git shortcuts: `gs` (status), `ga` (add), `gap` (interactive add), `gd` (diff), 
 
 npm shortcuts: `nr` (run), `nd` (run dev), `nb` (run build), `nt` (test), `ni` (install), and `nci` (clean install from the lockfile).
 
+`nds` runs the dev server from the current project directory, saves its complete
+output to `/tmp/graffiti-server.log`, and displays startup, warning/error and
+HTTP 4xx/5xx lines. The log is overwritten on each run. Read full messages and
+stack traces with `less -R /tmp/graffiti-server.log`; Ctrl-C stops the server as
+usual. This is a text filter, so inspect the full log when diagnosing a problem.
+
+
 Optional Zsh suffix aliases for web-development files are documented but disabled in `aliases.zsh`. When enabled, entering a filename such as `app.ts` directly at the prompt opens it in Neovim.
 
 ## Fuzzy finding

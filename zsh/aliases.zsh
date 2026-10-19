@@ -56,6 +56,7 @@ alias gp='git push'
 # npm: common project commands.
 alias nr='npm run'
 alias nd='npm run dev'
+alias nds='npm run dev 2>&1 | tee /tmp/graffiti-server.log | rg --line-buffered -i "Local:|Ready in|error|warn|failed|⨯|(^|[[:space:]])[45][0-9]{2}([[:space:]]|$)"'
 alias nb='npm run build'
 alias nt='npm test'
 alias ni='npm install'
