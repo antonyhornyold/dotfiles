@@ -64,3 +64,38 @@ alias nci='npm ci'
 if (( $+commands[bat] )); then
   alias cat='bat'
 fi
+
+# Search existing named Herdr sessions and attach to the selected session.
+h() {
+  emulate -L zsh
+  setopt pipefail
+
+  local dependency sessions session picker_exit
+  for dependency in herdr python3 fzf; do
+    if (( ! $+commands[$dependency] )); then
+      print -u2 -- "h: $dependency is required."
+      return 1
+    fi
+  done
+
+  sessions=$(herdr session list --json | python3 -c '
+import json, sys
+for session in json.load(sys.stdin)["sessions"]:
+    if not session["default"]:
+        print(session["name"])
+') || return
+
+  if [[ -z "$sessions" ]]; then
+    print -- 'No named Herdr sessions found.'
+    return 0
+  fi
+
+  session=$(print -r -- "$sessions" | fzf --no-multi --prompt='Session › ' \
+    --header='Enter: attach · Esc: cancel' --height=40% --reverse) || {
+    picker_exit=$?
+    (( picker_exit == 1 || picker_exit == 130 )) && return 0
+    return "$picker_exit"
+  }
+
+  [[ -n "$session" ]] && herdr session attach "$session"
+}

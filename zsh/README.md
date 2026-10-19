@@ -30,7 +30,7 @@ Zsh reads its configuration from `~/.config/zsh`, selected through `ZDOTDIR`.
 |---|---|
 | `.zprofile` | Loads the Homebrew environment for login shells |
 | `.zshrc` | Sets environment variables and history, initializes completion, and loads the modules below |
-| `aliases.zsh` | Navigation, Git, `eza`, `bat`, and Neovim aliases |
+| `aliases.zsh` | Navigation, Git, tool aliases, and the Herdr session picker |
 | `bindings.zsh` | Fallback history bindings when `zsh-vi-mode` is unavailable |
 | `plugins.zsh` | Loads vi mode, autosuggestions, fzf, and syntax highlighting in the required order |
 | `fzf.zsh` | Catppuccin styling, `fd` file discovery, and `bat`/`eza` previews |
@@ -74,6 +74,7 @@ Completion data is cached at `${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump`.
 | `glog` | Git log with a pager that exits when output fits on screen |
 | `gadog` | Decorated, one-line Git graph of all branches |
 | `dots` | Run Git against `~/.config`, for example `dots status` |
+| `h` | Search named Herdr sessions and attach to the selected session |
 | `mkcd DIR` | Create a directory and enter it |
 | `zsh-tools-update` | Install or update tools from the Brewfile |
 
@@ -96,6 +97,23 @@ Useful default fzf bindings include:
 | `Alt-C` | Find and enter a directory |
 
 `Ctrl-T` previews directories with `eza` and files with `bat` when both tools are installed.
+
+## Herdr session picker
+
+Type `h` in an interactive shell to open a searchable list of existing named
+Herdr sessions. Type part of a name, use the arrow keys to select, then press
+Enter to attach. Escape or Ctrl-C cancels without attaching. The reserved
+`default` session is hidden; running and stopped named sessions are included.
+
+The picker requires `herdr`, `python3`, and `fzf`, and uses the shared fzf colours.
+It attaches to an existing session rather than rebuilding its panes. For a fresh
+launch, run it from a normal Ghostty shell outside Herdr.
+
+New shells load `h` automatically. To load it in an already open shell, run:
+
+```zsh
+source ~/.config/zsh/aliases.zsh
+```
 
 ## Prompt
 
