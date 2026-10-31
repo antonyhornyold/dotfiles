@@ -38,3 +38,6 @@
 /rex/themes/*
 !/rex/themes/*.conf
 !/rex/themes/*.itermcolors
+
+# Python launcher test caches.
+/bin/**/__pycache__/

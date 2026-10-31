@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+"""Choose Rex, Ghostty with Herdr, or the standalone Ghostty project layout."""
+
+import argparse
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+
+CHOICES = {'Rex': 'rex', 'Ghostty + Herdr': 'herdr', 'Ghostty (separate windows)': 'ghostty'}
+
+
+def choose():
+    if not sys.stdin.isatty():
+        raise ValueError('choose --rex, --herdr, or --ghostty when running without an interactive terminal')
+    if shutil.which('fzf'):
+        result = subprocess.run(
+            ['fzf', '--no-multi', '--height=40%', '--reverse', '--prompt=Terminal > ',
+             '--header=Choose a project launcher; Esc cancels'],
+            input='\n'.join(CHOICES) + '\n', text=True, stdout=subprocess.PIPE,
+        )
+        if result.returncode in (1, 130):
+            return None
+        if result.returncode:
+            raise ValueError(f'fzf failed with exit status {result.returncode}')
+        selected = result.stdout.strip()
+        if selected not in CHOICES:
+            raise ValueError('the picker returned an unknown launcher')
+        return CHOICES[selected]
+    for index, title in enumerate(CHOICES, 1):
+        print(f'{index}. {title}', file=sys.stderr)
+    selected = input('Terminal [1-3; Enter cancels]: ').strip()
+    if not selected:
+        return None
+    if selected not in ('1', '2', '3'):
+        raise ValueError('choose 1, 2, or 3')
+    return list(CHOICES.values())[int(selected) - 1]
+
+
+def parse(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    backend = parser.add_mutually_exclusive_group()
+    for name in ('rex', 'herdr', 'ghostty'):
+        backend.add_argument('--' + name, dest='backend', action='store_const', const=name)
+    parser.add_argument('directory', nargs='?', default='.')
+    parser.add_argument('--name', help='New session label (Rex or Herdr)')
+    parser.add_argument('--no-attach', action='store_true', help='Prepare Rex/Herdr without showing or attaching')
+    parser.add_argument('--client', help='Rex app client to switch')
+    return parser.parse_args(argv)
+
+
+def build_command(args, directory, environment):
+    if args.backend == 'ghostty' and (args.name or args.no_attach or args.client):
+        raise ValueError('--name, --no-attach, and --client are not supported by the standalone Ghostty layout')
+    if args.client and args.backend != 'rex':
+        raise ValueError('--client is only supported with --rex')
+    binary = Path(__file__).resolve().parent
+    helper = binary / {'rex': 'rex-project', 'herdr': 'herdr-project', 'ghostty': 'project-open'}[args.backend]
+    command = [str(helper), str(directory)]
+    if args.name:
+        command += ['--name', args.name]
+    if args.no_attach:
+        command += ['--no-attach']
+    if args.client:
+        command += ['--client', args.client]
+    plain_ghostty = (environment.get('TERM_PROGRAM') == 'ghostty'
+                     and environment.get('HERDR_ENV') != '1' and not environment.get('REX_SESSION'))
+    if args.backend == 'herdr' and not args.no_attach and not plain_ghostty:
+        if not Path('/Applications/Ghostty.app').is_dir():
+            raise ValueError('Ghostty is required at /Applications/Ghostty.app for the Herdr option')
+        # Ghostty's -e preserves argv without shell expansion. Start a fresh login
+        # shell for PATH/NVM, and clear stale terminal context before Herdr attaches.
+        shell = 'unset HERDR_ENV REX_SESSION REX_BLOCK REX_SERVER REX_CLIENT REX_BIN_DIR; exec "$@"'
+        command = ['/usr/bin/open', '-na', '/Applications/Ghostty.app', '--args',
+                   '--working-directory=' + str(directory), '-e', '/bin/zsh', '-lic', shell,
+                   'project', *command]
+    return command
+
+
+def main():
+    args = parse()
+    directory = Path(args.directory).expanduser().resolve(strict=True)
+    if not directory.is_dir():
+        raise ValueError('the project path must be a directory')
+    git = subprocess.run(['git', '-C', str(directory), 'rev-parse', '--show-toplevel'],
+                         capture_output=True, text=True)
+    if git.returncode == 0:
+        directory = Path(git.stdout.rstrip('\n')).resolve()
+    args.backend = args.backend or choose()
+    if args.backend is None:
+        return
+    command = build_command(args, directory, os.environ)
+    if not os.access(command[0], os.X_OK):
+        raise ValueError(f'launcher is missing or not executable: {command[0]}')
+    os.execv(command[0], command)
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (OSError, ValueError) as error:
+        print(f'project: {error}', file=sys.stderr)
+        sys.exit(1)
+    except (EOFError, KeyboardInterrupt):
+        print('\nProject launch cancelled.', file=sys.stderr)

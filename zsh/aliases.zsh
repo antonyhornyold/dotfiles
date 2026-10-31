@@ -43,6 +43,8 @@ alias df='df -h'
 alias glog='PAGER="less -F -X" git log'
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 alias dots='git -C ~/.config'
+alias p='project'
+alias rp='rex-project'
 alias hp='herdr-project'
 
 # Git: inspect, stage, commit, and push.

@@ -57,6 +57,44 @@ After bootstrap finishes, open a new terminal. See the
 [Zsh README](zsh/README.md) and [Neovim README](nvim/README.md) for usage and
 update commands.
 
+## Choose a project terminal
+
+Run `project` (or `p`) inside a project to choose **Rex**, **Ghostty + Herdr**,
+or the existing **Ghostty separate-window layout**. Pass a directory to open
+another project. The chooser uses fzf when available, with a numbered fallback.
+Escape or an empty numbered answer cancels.
+
+```sh
+p ~/code/my-app                 # choose a launcher
+p --rex ~/code/my-app           # Rex
+p --rex ~/code/my-app --no-attach  # prepare Rex without app switching
+p --herdr ~/code/my-app         # Ghostty with a persistent Herdr session
+p --ghostty ~/code/my-app       # standalone Ghostty windows
+```
+
+`p` and the direct Rex shortcut `rp` are Zsh aliases. Open a new shell or run
+`source ~/.config/zsh/aliases.zsh` to load them. `hp` still opens Herdr directly,
+`h` still searches Herdr sessions, and `project-open`, `project-new`, and
+`project-close` retain their existing standalone Ghostty behavior.
+
+The shared command resolves the Git root before launching. `--name` and
+`--no-attach` work with Rex and Herdr; `--client` is Rex-only. Scripts must
+choose a backend explicitly instead of opening an interactive menu.
+
+From a plain Ghostty shell, the Herdr choice attaches there. From Rex, another
+terminal, or an existing Herdr session, it opens a new Ghostty instance using
+the supported macOS `open -na` mechanism and starts Herdr in an interactive login
+Zsh. `--herdr --no-attach` prepares only, with no app window.
+
+Rex and Herdr maintain separate sessions for the same project. Switching the
+launcher leaves existing sessions running; avoid starting both development
+servers on the same port. `project-close` applies only to windows created by the
+standalone Ghostty launcher. Detach from Herdr with Ctrl-B then `q`; select a
+Rex session using Ctrl-Space then `s`.
+
+Both terminal setups remain supported. See the [Zsh guide](zsh/README.md#choose-a-project-terminal)
+and [Rex guide](rex/README.md) for shortcuts and details.
+
 ## Open a project in Herdr
 
 Run `hp` from a project repository, or `hp ~/Code/my-node-app` from a normal

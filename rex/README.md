@@ -288,6 +288,28 @@ This verified the context and pane-control mechanism without making a model
 request. Remote Control remains off; terminal/session operations work, while
 CLI requests to switch the app still require that app setting.
 
+## Choose Rex or Ghostty/Herdr
+
+Both terminal setups remain supported. Use `project` (Zsh alias `p`) for the
+interactive chooser, or `p --rex DIR`, `p --herdr DIR`, and `p --ghostty DIR` for
+an explicit choice. `rp` calls this Rex launcher directly; `hp` and `h` retain
+their Herdr behavior. The Open Project palette action remains Rex-specific.
+See the [shared launcher guide](../README.md#choose-a-project-terminal).
+
+Rex and Herdr retain separate sessions. Choosing a different launcher leaves
+existing sessions running; plan dev-server ports accordingly. The standalone
+Ghostty launcher and its close command remain available too.
+
+The dispatcher is covered by ten tests that exercise backend routing, nested
+terminal handling, argv preservation, Git-root selection, cancellation, invalid
+options, and exit-code propagation with stub launchers. GUI handoff is checked
+against Ghostty's bundled CLI documentation and command arguments; the tests do
+not open application windows. Run the suite with:
+
+```sh
+python3 -m unittest discover -s ~/.config/bin/tests -p test_project.py
+```
+
 ## Remaining implementation
 
 - Add optional event-driven scripts after the main workflow works.

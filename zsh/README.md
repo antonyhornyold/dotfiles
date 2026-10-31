@@ -75,6 +75,8 @@ Completion data is cached at `${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump`.
 | `gadog` | Decorated, one-line Git graph of all branches |
 | `dots` | Run Git against `~/.config`, for example `dots status` |
 | `h` | Search named Herdr sessions and attach to the selected session |
+| `p [DIR]` | Choose Rex, Ghostty + Herdr, or standalone Ghostty |
+| `rp [DIR]` | Create or reopen a project’s Rex session |
 | `hp [DIR]` | Create or reopen a project’s two-tab Herdr session |
 | `mkcd DIR` | Create a directory and enter it |
 | `zsh-tools-update` | Install or update tools from the Brewfile |
@@ -108,6 +110,36 @@ Useful default fzf bindings include:
 | `Alt-C` | Find and enter a directory |
 
 `Ctrl-T` previews directories with `eza` and files with `bat` when both tools are installed.
+
+## Choose a project terminal
+
+`p` is an alias for `project`. Run `p` in a project, or `p ~/code/my-app`, to
+choose Rex, Ghostty + Herdr, or standalone Ghostty. Use explicit flags to skip
+the menu:
+
+```sh
+p --rex ~/code/my-app
+p --herdr ~/code/my-app
+p --ghostty ~/code/my-app
+```
+
+`rp` calls `rex-project` directly; `hp` still calls `herdr-project` directly.
+The shared chooser resolves the Git root and forwards `--name` and
+`--no-attach` to Rex/Herdr, and `--client` to Rex. Standalone Ghostty accepts
+only the directory. Without an interactive terminal, a backend flag is required.
+The menu uses fzf when installed and numbered input otherwise; cancellation
+launches nothing. Choices are per invocation, with no saved default.
+
+The Herdr choice uses the current plain Ghostty shell, or opens Ghostty when
+invoked from Rex, another terminal, or an existing Herdr session. The new
+Ghostty shell clears inherited Rex/Herdr terminal context before attaching.
+`p --herdr --no-attach` prepares without opening a window. With Remote Control
+off, use `p --rex --no-attach` then select the session in Rex, or use the Rex
+Open Project palette action.
+
+Rex and Herdr sessions are independent. Existing launchers and session pickers
+remain available. See the [project-terminal guide](../README.md#choose-a-project-terminal)
+for lifecycle and dev-server notes.
 
 ## Herdr project launcher
 
