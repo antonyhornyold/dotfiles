@@ -100,3 +100,71 @@ that directory with `project-open`. It makes no commit or remote. Names use
 lowercase letters, digits, dots, hyphens, and underscores; an existing project
 directory is never reused or overwritten. The new directory starts empty, so
 the server pane waits at a shell prompt until the project has a dev server.
+
+## Rex beta preflight
+
+Checked on 2026-10-31 against Rex Beta 0.1.0 (1696), client label `anthill`.
+The bundled CLI reports `rex 0.0.1793377904-ge6592f`, built
+2026-10-30T16:31:44Z, API revision 8. Recheck these details after beta updates.
+
+`bin/rex` forwards arguments to the CLI bundled in `/Applications/Rex Beta.app`.
+The existing Zsh login configuration already puts `~/.config/bin` on PATH.
+Inside Rex, prefer the server's injected CLI directory (`REX_BIN_DIR`) if a
+shell startup change ever puts a different CLI first. The launcher assumes the
+standard application name and installation location.
+
+Useful inspection commands:
+
+```sh
+rex version
+rex client ls
+rex -C anthill actions
+rex keymap
+rex config check
+```
+
+The configuration target is `~/.config/rex/init.lua`; it did not exist at this
+check. No Rex bindings or appearance preferences were changed during preflight.
+In this build, `rex keymap` without `--request` shows only file bindings, even
+with `-C`; it does not retrieve the app's default shortcuts. Inspect defaults
+under Settings > Shortcuts. See `rex help keymap` for client request input.
+
+### Confirmed actions for the planned controls
+
+| Purpose | Client action | Arguments |
+|---|---|---|
+| Split | `pane.split` | `direction` (`right` or `down` for our layout) |
+| Focus a pane | `pane.focus` | `direction` (`left`, `down`, `up`, `right`), optional `wrap` |
+| Equalize | `pane.balance` | None |
+| Zoom | `pane.zoom` | None |
+| Close pane | `pane.close` | None |
+| New / next / previous tab | `client.tab.new`, `client.tab.next`, `client.tab.previous` | None |
+| Switch session | `session.switch` | None |
+| Resize | `pane.resize` | `direction`, optional `amount` |
+| Enter resize mode | `client.mode.enter` | `name`, optional `once` |
+| Exit mode | `client.mode.exit` | None |
+| Pass a key through | `pane.send_key` | `key` |
+
+Observed shipped shortcuts include Cmd-D / Shift-Cmd-D for splits right/down,
+Option-Cmd-Arrows for pane focus, Cmd-[ / Cmd-] for previous/next pane,
+Cmd-T for a new tab, Cmd-K for session switching, and Shift-Cmd-P for the
+command palette. Shortcuts recorded in the app take priority over Lua bindings.
+
+### Appearance settings available in this build
+
+- Interface: Auto/Light/Dark, Classic/Glass, theme tint, tab position,
+  Comfortable/Compact pane style, pane headers, matching program backgrounds,
+  trackpad gestures, and animation style.
+- Themes: separate light/dark themes, custom themes, extended palettes, and
+  Ghostty/iTerm theme-file import. Current dark theme: Merino Dark.
+  Catppuccin Mocha was not listed among the installed themes.
+- Terminal: font and size controls, style and advanced typography, contrast,
+  color palette behavior, Display P3, cursor style/blink, Option-key behavior,
+  scrolling, padding color, selection, titles, and shell startup command.
+- Exact Ghostty equivalents for opacity, blur, numeric padding, borderless
+  windows, inactive-pane opacity, and startup fullscreen were not established
+  during this inspection.
+
+Remote Control was off. It was left off; a separate decision is needed before
+using agent actions that control the app. Existing sessions and old launchers
+were left intact.
