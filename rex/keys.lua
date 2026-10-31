@@ -31,3 +31,9 @@ end
 rex.bind("resize/=", "pane.balance")
 rex.bind("resize/enter", "client.mode.exit")
 rex.bind("resize/escape", "client.mode.exit")
+
+-- Development actions open their own tabs and never type into a running pane.
+rex.bind("ctrl+space>g", "open_lazygit")
+rex.bind("ctrl+space>t", "run_tests")
+rex.bind("ctrl+space>o", "open_project_logs")
+rex.bind("ctrl+space>,", "edit_rex_config")

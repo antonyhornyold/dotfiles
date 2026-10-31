@@ -1,8 +1,8 @@
 # Rex configuration
 
 Configuration for the Rex Beta app on macOS, with Ctrl-Space pane controls,
-tab/session navigation, a resize mode, and a project launcher. General
-development actions are still pending.
+tab/session navigation, a resize mode, a project launcher, and development
+actions for Git, tests, logs, and config editing.
 
 ## Files
 
@@ -16,8 +16,8 @@ development actions are still pending.
 
 Rex resolves `require("keys")` and the other modules beside `init.lua`.
 The keys module defines shortcuts and a resize mode. The projects module defines
-the Open Project action. The actions module remains a placeholder. Loading the
-configuration creates no sessions or processes.
+the Open Project action. The actions module defines development tools. Loading
+the configuration creates no sessions or processes.
 
 ## Location and CLI
 
@@ -62,6 +62,10 @@ sequence before its final key. The existing Cmd-based shortcuts remain available
 | `n` / `p` | Next / previous tab |
 | `s` | Open the session switcher |
 | `r` | Enter resize mode |
+| `g` | Open Lazygit |
+| `t` | Run project tests |
+| `o` | Open project logs |
+| `,` | Edit Rex config |
 | Ctrl-Space again | Send one Ctrl-Space to the terminal |
 
 In resize mode, use `h/j/k/l` to resize, Shift with those keys for larger
@@ -157,9 +161,69 @@ simultaneous launches, and an actual dependency-free npm dev server through
 was correctly refused with Remote Control off. Fixtures used
 stub editor/agent processes; a real Codex sign-in was not part of the checks.
 
+## Development actions
+
+Search for these titles in the command palette (Shift-Cmd-P), or use the
+Ctrl-Space shortcuts above. Each invocation opens a new, focused tab in the
+current session. The existing panes and programs are left running. Command
+output is retained after the program exits; close the tab when finished.
+
+| Palette title | Action name | Behavior |
+|---|---|---|
+| Open Lazygit | `open_lazygit` | Opens Lazygit at the Git root; refuses non-Git directories |
+| Run Project Tests | `run_tests` | Runs `npm run test` and retains successful or failed output |
+| Open Project Logs | `open_project_logs` | Follows the full log saved by `project-dev` using `less -R +F` |
+| Edit Rex Config | `edit_rex_config` | Opens the effective `init.lua` in Neovim |
+
+Project actions use the focused program's working directory, falling back to
+the terminal's reported directory and the launcher's saved project identity,
+then resolve the Git root. New action tabs explicitly report their startup
+directory to work around missing process metadata in this beta. Non-Git projects
+use that directory for tests and logs. Use an explicit directory to target a
+project from another pane. Outside Rex, select the destination session with
+`-s SESSION`:
+
+```sh
+rex do open_lazygit
+rex do run_tests
+rex do run_tests script=test:integration
+rex do open_project_logs
+rex do edit_rex_config
+rex do run_tests -s SESSION directory=/absolute/path/to/project
+```
+
+Tests currently support npm scripts, matching the project launcher. The default
+is `test`; use `script=NAME` for another package script. Test tabs print the
+actual command exit status explicitly. In the inspected beta, the terminal
+process API reported 0 for a failing command, so use the printed result. Missing or malformed
+`package.json`, a missing script, a missing executable, and a missing log are
+reported before a tab is created. Scripts run as configured by the project, so
+a watch-mode test script will remain running until stopped. Programs load your
+interactive Zsh setup, including NVM.
+
+In logs, press Ctrl-C to stop following and inspect earlier output; `q` quits.
+The log filename uses the same project path hash as `project-dev`, under
+`${XDG_STATE_HOME:-$HOME/.local/state}/herdr/logs/`. Start the project's dev
+server through `project-dev` before opening its log.
+
+The config action honors the server's `REX_CONFIG` and `XDG_CONFIG_HOME`.
+Use `:edit keys.lua`, `:edit actions.lua`, or `:edit projects.lua` in Neovim to
+edit other modules. After saving, validate with `rex config check` and apply
+with `rex config reload`.
+
+These actions create tabs through the session API, so they do not require
+Remote Control to be enabled in the app.
+
+Live fixture checks exercised real Lazygit and Neovim, npm scripts returning
+0 and 7, retained test results, the full project-dev log in less, and Git-root
+resolution from a nested directory with spaces and shell characters, and
+launching a project action from a running tool tab. Missing
+scripts, malformed package JSON, non-Git Lazygit requests, and missing logs
+reported errors without creating tabs. The original shell pane stayed running;
+the temporary session and its generated log were removed after verification.
+
 ## Remaining implementation
 
-- Add Lazygit, test, log-viewing, and config-editing actions.
 - Apply appearance preferences and set up the agent integration.
 - Add optional event-driven scripts after the main workflow works.
 
