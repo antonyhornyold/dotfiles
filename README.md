@@ -170,3 +170,12 @@ command palette. Shortcuts recorded in the app take priority over Lua bindings.
 Remote Control was off. It was left off; a separate decision is needed before
 using agent actions that control the app. Existing sessions and old launchers
 were left intact.
+
+## Open a project in Rex
+
+Run `rex-project` inside a project, or `rex-project ~/code/my-app`. New projects
+get `code` (Neovim / Codex) and `run` (project-dev / shell) tabs. Existing projects
+reopen their saved session without restarting programs. Use `--no-attach` to
+prepare a session without switching the app, or search **Open Project** in Rex's
+command palette. See the [Rex guide](rex/README.md#project-launcher) for client
+selection, requirements, saved identity, and recovery after interrupted creation.

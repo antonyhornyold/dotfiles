@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""Create a project's Rex layout once, then reopen its saved session."""
+
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+from urllib.parse import unquote, urlparse
+
+
+def run(argv, env):
+    result = subprocess.run(argv, capture_output=True, text=True, env=env, timeout=45)
+    if result.returncode:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f"{argv[0]} failed")
+    return json.loads(result.stdout) if result.stdout.strip() else None
+
+
+def save(path, records):
+    temporary = path.with_suffix('.tmp')
+    temporary.write_text(json.dumps(records, indent=2) + '\n')
+    temporary.replace(path)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('directory', nargs='?', default='.')
+    parser.add_argument('--name', help='Session label for a new project (default: folder name)')
+    parser.add_argument('--no-attach', action='store_true', help='Prepare without switching the Rex app')
+    parser.add_argument('--client', help='Rex app client to switch (needed when several are connected)')
+    parser.add_argument('--json', action='store_true', help='Print the result as JSON')
+    args = parser.parse_args()
+    directory = args.directory
+    if directory.startswith('file:'):
+        uri = urlparse(directory)
+        if uri.scheme != 'file' or uri.netloc not in ('', 'localhost'):
+            parser.error('only local file URLs are supported')
+        directory = unquote(uri.path)
+    directory = Path(directory).expanduser().resolve(strict=True)
+    if not directory.is_dir():
+        parser.error('the project path must be a directory')
+    git = subprocess.run(['git', '-C', str(directory), 'rev-parse', '--show-toplevel'],
+                         capture_output=True, text=True, check=False)
+    root = Path(git.stdout.rstrip('\n')).resolve() if git.returncode == 0 else directory
+    name = args.name or re.sub(r'[^A-Za-z0-9_-]+', '-', root.name).strip('-')[:64]
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}', name) or name.casefold() == 'default':
+        parser.error('use --name with 1–64 letters, digits, underscores or hyphens (not default)')
+
+    rex = str(Path(__file__).resolve().with_name('rex'))
+    env = os.environ.copy()
+    # Commands always use explicit IDs, independent of the calling pane.
+    for key in ('REX_SESSION', 'REX_BLOCK'):
+        env.pop(key, None)
+    identity = run([rex, 'whoami', '--json'], env)
+    endpoint = identity['endpoint']
+    if not endpoint.startswith('unix://'):
+        raise RuntimeError('rex-project requires a local Unix-socket server; local paths cannot identify remote projects')
+    command = [rex, '-S', endpoint, '--timeout', '30s']
+
+    def api(method, payload=None):
+        return run(command + ['api', 'call', method, json.dumps(payload or {})], env)
+
+    # Scope identity records to the server host, and lock all project creation on it.
+    state_home = Path(env.get('XDG_STATE_HOME') or str(Path.home() / '.local/state')).expanduser()
+    state_dir = state_home / 'rex/projects'
+    state_dir.mkdir(parents=True, exist_ok=True)
+    host = hashlib.sha256(identity['host_id'].encode()).hexdigest()[:16]
+    state_file = state_dir / f'{host}.json'
+    with (state_dir / f'{host}.lock').open('a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        records = json.loads(state_file.read_text()) if state_file.exists() else {}
+        if not isinstance(records, dict):
+            raise RuntimeError(f'invalid project registry: {state_file}')
+        sessions = api('session.list').get('sessions') or []
+        entry = records.get(str(root))
+        if entry is not None and not isinstance(entry, dict):
+            raise RuntimeError(f'invalid project record in {state_file}')
+        if entry and entry.get('pending'):
+            raise RuntimeError(f'previous creation has an uncertain result; inspect rex ls and the record for {root} in {state_file} before retrying')
+        existing = next((s for s in sessions if entry and s['session_id'] == entry.get('session_id')), None)
+        created = existing is None
+        if existing:
+            # Do not reset layout, focus, labels, programs, or a renamed session.
+            result = dict(entry, label=existing['label'], created=False)
+        else:
+            if any(s['label'].casefold() == name.casefold() for s in sessions):
+                raise RuntimeError(f'session label {name!r} already exists without this project identity; choose --name')
+            programs = {}
+            for dependency in ('nvim', 'codex'):
+                programs[dependency] = shutil.which(dependency)
+                if not programs[dependency]:
+                    probe = subprocess.run(
+                        ['/bin/zsh', '-lic', 'command -v -- "$1"', 'rex-project', dependency],
+                        capture_output=True, text=True, env=env, timeout=30)
+                    candidate = probe.stdout.rstrip('\n').split('\n')[-1]
+                    if probe.returncode == 0 and Path(candidate).is_file() and os.access(candidate, os.X_OK):
+                        programs[dependency] = candidate
+                if not programs[dependency]:
+                    raise RuntimeError(f'{dependency} is required to create a new project session')
+            package = root / 'package.json'
+            has_dev = False
+            if package.exists():
+                data = json.loads(package.read_text())
+                scripts = data.get('scripts', {}) if isinstance(data, dict) else {}
+                has_dev = isinstance(scripts, dict) and isinstance(scripts.get('dev'), str) and bool(scripts['dev'].strip())
+            dev = Path(__file__).resolve().with_name('project-dev')
+            if has_dev:
+                if not os.access(dev, os.X_OK):
+                    raise RuntimeError('project-dev must be executable and installed beside rex-project')
+                check = subprocess.run([
+                    '/bin/zsh', '-lic',
+                    'for dependency in "$@"; do command -v "$dependency" >/dev/null || exit 1; done',
+                    'rex-project', 'npm', 'rg', 'tee', 'shasum',
+                ], capture_output=True, text=True, env=env, timeout=30)
+                if check.returncode:
+                    raise RuntimeError('project-dev needs npm, rg, tee, and shasum in your interactive Zsh environment')
+
+            def block(label, program=None):
+                options = {'cwd': str(root)}
+                if program:
+                    # Load NVM and project shell setup, then replace the shell.
+                    # Arguments stay separate; project paths are never shell code.
+                    options.update(shell='none',
+                                   command=['/bin/zsh', '-lic', 'exec "$@"', 'rex-project', *program],
+                                   exit={'on_completion': False})
+                return {'block': {'flavor': 'com.superlogical.terminal.shell',
+                                  'label': label, 'options': options}}
+
+            def split(left, right):
+                return {'split': {'direction': 'horizontal', 'ratio': 0.5,
+                                  'before': left, 'after': right}}
+
+            request = {'label': name, 'initial_windows': [
+                {'window_label': 'code', 'layout': split(
+                    block('editor', [programs['nvim'], '.']),
+                    block('agent', [programs['codex']]))},
+                {'window_label': 'run', 'layout': split(
+                    block('dev', [str(dev)] if has_dev else None), block('shell'))},
+            ]}
+            # If interrupted or timed out, never blindly retry a creation request.
+            records[str(root)] = {'pending': True, 'label': name}
+            save(state_file, records)
+            made = api('session.create', request)
+            result = {'session_id': made['session_id'], 'root': str(root),
+                      'label': name, 'has_dev': has_dev}
+            records[str(root)] = result
+            save(state_file, records)
+            api('session.focus_block', {'session_id': result['session_id'],
+                                      'block_id': made['initial_windows'][0]['block_ids'][0]})
+            result = dict(result, created=True)
+
+    if not args.no_attach:
+        select = command + (['-C', args.client] if args.client else [])
+        try:
+            run(select + ['do', 'session.select', '--args',
+                          json.dumps({'session_id': result['session_id']})], env)
+        except RuntimeError as error:
+            raise RuntimeError(f"session {result['session_id']} is ready, but app switching failed: {error}. Use --no-attach to prepare only, or the Open Project palette action inside Rex") from error
+    if args.json:
+        print(json.dumps(result))
+    else:
+        verb = 'Created' if created else 'Reopened'
+        print(f"{verb} {result['label']}: {result['session_id']}")
+        if created:
+            print('code: Neovim / Codex; run: ' + ('project-dev / shell.' if result['has_dev'] else 'two shells (no npm dev script).'))
+        else:
+            print('Existing panes, processes, and conversations are unchanged.')
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (OSError, ValueError, KeyError, RuntimeError, subprocess.TimeoutExpired) as error:
+        print(f'rex-project: {error}', file=sys.stderr)
+        sys.exit(1)
