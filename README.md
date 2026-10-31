@@ -123,8 +123,10 @@ rex keymap
 rex config check
 ```
 
-The configuration target is `~/.config/rex/init.lua`; it did not exist at this
-check. No Rex bindings or appearance preferences were changed during preflight.
+The configuration target is `~/.config/rex/init.lua`; it did not exist during
+preflight. The [Rex configuration guide](rex/README.md) describes the structure
+now in place and the remaining implementation. No Rex bindings or appearance
+preferences were changed during preflight.
 In this build, `rex keymap` without `--request` shows only file bindings, even
 with `-C`; it does not retrieve the app's default shortcuts. Inspect defaults
 under Settings > Shortcuts. See `rex help keymap` for client request input.

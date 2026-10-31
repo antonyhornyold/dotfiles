@@ -22,3 +22,13 @@
 !/herdr/config.toml
 !/herdr/workspace-status.py
 !/herdr/battery-status.py
+
+# Track Rex configuration and scripts, excluding other generated files.
+!/rex/
+/rex/*
+!/rex/*.lua
+!/rex/README.md
+!/rex/scripts/
+/rex/scripts/*
+!/rex/scripts/*.lua
+!/rex/scripts/README.md

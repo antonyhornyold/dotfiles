@@ -1,0 +1,2 @@
+-- General development actions belong here (Lazygit, tests, logs, config).
+-- Define rex.action callbacks at load time; run live API calls inside them.

@@ -1,0 +1,3 @@
+-- Project session and layout actions belong here.
+-- Planned: reuse existing sessions, or create code and run tabs on demand.
+-- Do not create sessions, panes, or processes while this module loads.

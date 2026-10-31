@@ -1,0 +1,2 @@
+-- Keyboard shortcuts and resize modes belong here.
+-- Planned next: Ctrl-Space pane controls, tabs, and session switching.
