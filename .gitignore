@@ -32,3 +32,9 @@
 /rex/scripts/*
 !/rex/scripts/*.lua
 !/rex/scripts/README.md
+
+# Portable Rex appearance assets.
+!/rex/themes/
+/rex/themes/*
+!/rex/themes/*.conf
+!/rex/themes/*.itermcolors

@@ -8,9 +8,11 @@ actions for Git, tests, logs, and config editing.
 
 | Path | Purpose |
 |---|---|
-| `init.lua` | Entry point; loads actions, projects, then keys |
+| `init.lua` | Entry point; loads actions, appearance, projects, then keys |
 | `keys.lua` | Keyboard shortcuts and modes |
 | `actions.lua` | General development actions |
+| `appearance.lua` | Import and select the saved Catppuccin Mocha theme |
+| `themes/` | Portable Mocha palette files |
 | `projects.lua` | Project session and layout actions |
 | `scripts/` | Standalone scripts run explicitly with `rex do` |
 
@@ -222,9 +224,72 @@ scripts, malformed package JSON, non-Git Lazygit requests, and missing logs
 reported errors without creating tabs. The original shell pane stayed running;
 the temporary session and its generated log were removed after verification.
 
+## Appearance
+
+The macOS app now uses:
+
+| Setting | Value |
+|---|---|
+| Color scheme | Dark |
+| Dark theme | Catppuccin Mocha |
+| Terminal font | Iosevka Term SS05, Regular, 14pt |
+| Interface / pane style | Classic / Comfortable |
+| Inactive-pane fading | Surface & Content |
+| Focused-pane edge highlight | On |
+| Padding color / program backgrounds | Extend / Match program backgrounds on |
+| Option key | Left sends Alt |
+
+Font and interface preferences belong to the app's settings, not `init.lua`.
+On another Mac, set these values in Settings > Terminal and Settings > Interface
+(the latter has Customize pane behavior). The Lua config and theme assets live
+here so they can be cloned with the dotfiles.
+
+Search **Apply Catppuccin Mocha** in the Rex command palette to import and select
+`themes/Catppuccin Mocha.itermcolors`. This invokes the app's supported import
+action directly; the beta's file-picker Open button stayed disabled for both
+Ghostty and iTerm theme files during setup. The `.conf` file retains the exact
+source palette copied from the installed Ghostty theme; the iTerm file contains
+the same 16 ANSI colors, background/foreground, cursor, and selection colors.
+The palette action was verified with Remote Control off.
+
+Comfortable pane spacing is the available approximation of the old Ghostty
+padding. Exact numeric padding, 95% opacity, blur radius, borderless windows,
+and 80% inactive-pane opacity were not exposed in the inspected settings.
+No undocumented preference keys were written to approximate them.
+
+## Codex integration
+
+Rex's user-level skill and SessionStart hook are installed and current:
+
+- Skill: `~/.agents/skills/rex/SKILL.md`
+- Hook definition: `~/.codex/hooks.json`
+
+The skill asks the installed Rex CLI for its current guide. The hook supplies
+Rex session and terminal context at the start of a Codex session. Automatic
+session naming is off so project labels stay under your control. These are
+account-level installations outside this Git repository; reproduce them with:
+
+```sh
+rex skill setup --agent codex --dry-run
+rex skill setup --agent codex
+rex skill status
+```
+
+In Codex CLI, enter `/hooks` directly at the prompt to review and approve the
+Rex SessionStart hook. The interactive screen showed SessionStart installed 1,
+active 1 after setup. Start a new Codex session inside Rex to receive the
+startup context. Installation does not automatically approve a new or changed
+hook; see the [official hook documentation](https://learn.chatgpt.com/docs/hooks).
+
+Verification also ran a temporary program inside Rex, checked its inherited
+`REX_SESSION` and `REX_BLOCK` against the actual IDs, and had it open a split
+beside itself through the CLI. The temporary session was removed afterward.
+This verified the context and pane-control mechanism without making a model
+request. Remote Control remains off; terminal/session operations work, while
+CLI requests to switch the app still require that app setting.
+
 ## Remaining implementation
 
-- Apply appearance preferences and set up the agent integration.
 - Add optional event-driven scripts after the main workflow works.
 
 Live Rex API calls belong in action callbacks or standalone scripts, not at
